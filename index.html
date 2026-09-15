@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qundylyk.kz — Ұлы тұлғалар мұрасы</title>
+
+<!-- Google Fonts: Cormorant Garamond (салтанатты антиква — Hero мен тақырыптарға),
+     Jost (геометриялық sans-serif — негізгі мәтін мен интерфейс элементтеріне) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!-- 3D модельдерді көрсету үшін Google model-viewer компоненті (.glb/.gltf файлдарын оқиды) -->
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+<style>
+/* ==========================================================================
+   1. ТОКЕНДЕР / АЙНЫМАЛЫЛАР (Design tokens)
+   ========================================================================== */
+:root{
+  --navy-deep:   #081426;   /* ең қою көк — hero фоны */
+  --navy:        #0E2444;   /* негізгі көк байрақ реңкі */
+  --navy-soft:   #16335C;   /* ашығырақ көк — көлеңкелер, шеттер */
+  --sand:        #F2E8D6;   /* жылы құм түсті фон */
+  --sand-deep:   #E7D9BC;   /* сәл қоюырақ құм — карточкалар аясы */
+  --ink:         #241B10;   /* негізгі мәтін түсі (құм фонда) */
+  --cream:       #F5EEDF;   /* ашық мәтін (көк фонда) */
+  --gold:        #C6A048;   /* негізгі алтын/қола екпін */
+  --gold-bright: #E9C978;   /* жарық алтын — glow, hover */
+  --gold-dim:    rgba(198,160,72,0.35);
+  --turquoise:   #2E6B67;   /* асыл тас реңкі — сирек екпін */
+
+  --font-display: 'Cormorant Garamond', 'Georgia', serif;
+  --font-body: 'Jost', 'Segoe UI', sans-serif;
+
+  --container: 1180px;
+}
+
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+body{
+  margin:0;
+  background: var(--sand);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img{ max-width:100%; display:block; }
+a{ color: inherit; }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ==========================================================================
+   2. ОРНАМЕНТ (ою-өрнек фоны) — қошқар мүйіз стилінде, төмен opacity
+   ========================================================================== */
+.ornament-layer{
+  position:absolute; inset:0;
+  pointer-events:none;
+  opacity:0.09;
+  z-index:0;
+}
+.ornament-layer svg{ width:100%; height:100%; }
+
+.corner-ornament{
+  position:absolute;
+  width:130px; height:130px;
+  opacity:0.5;
+  z-index:1;
+  pointer-events:none;
+}
+.corner-ornament.tl{ top:18px; left:18px; }
+.corner-ornament.br{ bottom:18px; right:18px; transform: rotate(180deg); }
+@media (max-width:640px){
+  .corner-ornament{ width:80px; height:80px; }
+}
+
+/* ==========================================================================
+   3. HERO БӨЛІМІ
+   ========================================================================== */
+.hero{
+  position:relative;
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse at 50% 20%, var(--navy-soft) 0%, var(--navy) 45%, var(--navy-deep) 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding: 40px 24px;
+  overflow:hidden;
+}
+
+.hero-eyebrow{
+  color: var(--gold-bright);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 22px;
+  position:relative;
+  z-index:2;
+}
+
+.hero-title{
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--cream);
+  font-size: clamp(3rem, 9vw, 6.4rem);
+  letter-spacing: 0.01em;
+  margin: 0;
+  position:relative;
+  z-index:2;
+  background: linear-gradient(180deg, #FBEFCB 0%, var(--gold-bright) 55%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 60px rgba(233,201,120,0.25);
+}
+
+.hero-divider{
+  width: 120px; height: 1px;
+  margin: 28px auto;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  position:relative; z-index:2;
+}
+
+.hero-subtitle{
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--cream);
+  font-size: clamp(1.15rem, 2.4vw, 1.55rem);
+  max-width: 620px;
+  opacity: 0.88;
+  position:relative; z-index:2;
+}
+
+/* Аудио түймесі */
+.audio-btn{
+  margin-top: 46px;
+  position:relative; z-index:2;
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  padding: 14px 30px;
+  border-radius: 999px;
+  border: 1px solid var(--gold-dim);
+  background: rgba(198,160,72,0.08);
+  color: var(--gold-bright);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  cursor:pointer;
+  transition: background .35s ease, border-color .35s ease, transform .25s ease;
+}
+.audio-btn:hover{
+  background: rgba(198,160,72,0.16);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+.audio-btn:focus-visible{ outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+.audio-btn .wave-icon{ display:flex; align-items:center; gap:3px; height:16px; }
+.audio-btn .wave-icon span{
+  display:block; width:3px; background: var(--gold-bright); border-radius:2px;
+  height: 6px;
+}
+.audio-btn.is-playing .wave-icon span{ animation: waving 0.9s ease-in-out infinite; }
+.audio-btn.is-playing .wave-icon span:nth-child(2){ animation-delay:0.15s; }
+.audio-btn.is-playing .wave-icon span:nth-child(3){ animation-delay:0.3s; }
+@keyframes waving{
+  0%,100%{ height:6px; } 50%{ height:16px; }
+}
+.audio-btn.is-disabled{ opacity:0.55; cursor:default; }
+.audio-btn.is-indicator{ cursor:default; }
+.audio-btn.is-indicator:hover{ transform:none; background: rgba(198,160,72,0.08); border-color: var(--gold-dim); }
+
+.scroll-hint{
+  position:absolute; bottom:30px; left:50%; transform: translateX(-50%);
+  color: var(--gold-dim);
+  font-size:0.8rem;
+  letter-spacing:0.1em;
+  z-index:2;
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+}
+.scroll-hint .line{ width:1px; height:32px; background: var(--gold-dim); }
+
+/* Авторлық жазба — hero-дың оң жоғарғы бұрышында */
+.author-credit{
+  position:absolute;
+  top: 22px; right: 26px;
+  z-index: 3;
+  color: var(--gold-bright);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  opacity: 0.85;
+  text-align:right;
+  line-height: 1.4;
+}
+@media (max-width: 640px){
+  .author-credit{
+    position:static;
+    margin-top: 34px;
+    text-align:center;
+    font-size: 0.75rem;
+  }
+}
+
+/* ==========================================================================
+   4. ТҰЛҒАЛАР БӨЛІМІ (Figures grid)
+   ========================================================================== */
+.figures-section{
+  position:relative;
+  padding: 110px 24px 120px;
+  background: var(--sand);
+  overflow:hidden;
+}
+.section-head{
+  max-width: var(--container);
+  margin: 0 auto 64px;
+  text-align:center;
+  position:relative; z-index:2;
+}
+.section-head h2{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+  color: var(--navy);
+  margin: 0 0 16px;
+}
+.section-head p{
+  max-width: 560px;
+  margin: 0 auto;
+  color: #55483327;
+  color: rgba(36,27,16,0.72);
+  font-size: 1.05rem;
+}
+
+.figures-grid{
+  max-width: var(--container);
+  margin: 0 auto;
+  position:relative; z-index:2;
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+@media (max-width: 980px){
+  .figures-grid{ grid-template-columns: repeat(2, 1fr); gap: 28px; }
+}
+@media (max-width: 560px){
+  .figures-grid{ grid-template-columns: 1fr; max-width: 360px; }
+}
+
+.figure-card{
+  background: linear-gradient(180deg, var(--sand-deep) 0%, var(--sand) 100%);
+  border: 1px solid rgba(198,160,72,0.25);
+  border-radius: 6px;
+  padding: 28px 20px 26px;
+  cursor:pointer;
+  text-align:center;
+  position:relative;
+  transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+}
+.figure-card:hover, .figure-card:focus-visible{
+  transform: translateY(-6px);
+  border-color: var(--gold);
+  box-shadow: 0 18px 40px -18px rgba(14,36,68,0.35);
+  outline:none;
+}
+
+.figure-portrait-wrap{
+  position:relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 4px;
+  overflow:hidden;
+  margin-bottom: 18px;
+  display:flex; align-items:flex-end; justify-content:center;
+}
+/* Алтын жарық эффектісі (glow) — hover кезінде күшейеді */
+.figure-portrait-wrap::before{
+  content:"";
+  position:absolute; inset: 8%;
+  background: radial-gradient(circle, var(--gold-bright) 0%, transparent 68%);
+  opacity: 0.18;
+  filter: blur(18px);
+  transition: opacity .45s ease, transform .45s ease;
+  z-index:0;
+}
+.figure-card:hover .figure-portrait-wrap::before{
+  opacity: 0.5;
+  transform: scale(1.15);
+}
+.figure-portrait{
+  position:relative; z-index:1;
+  width: 88%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom;
+  transition: transform .5s cubic-bezier(.2,.7,.3,1);
+  /* СУРЕТ ТАЛАБЫ: фонсыз (transparent PNG), тік бағдарлы портрет */
+}
+.figure-card:hover .figure-portrait{ transform: scale(1.08); }
+
+.figure-name{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.35rem;
+  color: var(--navy);
+  margin: 0 0 4px;
+}
+.figure-role{
+  font-size: 0.85rem;
+  color: var(--turquoise);
+  letter-spacing: 0.02em;
+}
+
+.play-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top: 14px;
+  font-size: 0.8rem;
+  color: var(--gold);
+  border-top: 1px solid rgba(198,160,72,0.3);
+  padding-top: 12px;
+  width: 100%;
+  justify-content:center;
+}
+.play-chip svg{ width:12px; height:12px; fill: var(--gold); }
+
+/* ==========================================================================
+   5. ВИДЕО МОДАЛЬ ТЕРЕЗЕСІ
+   ========================================================================== */
+.modal-overlay{
+  position:fixed; inset:0;
+  background: rgba(8,20,38,0.35);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  display:flex; align-items:center; justify-content:center;
+  padding: 24px;
+  z-index: 1000;
+  opacity:0;
+  visibility:hidden;
+  transition: opacity .5s ease, backdrop-filter .5s ease;
+}
+.modal-overlay.is-open{
+  opacity:1;
+  visibility:visible;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(8,20,38,0.62);
+}
+
+.modal-box{
+  width: min(920px, 100%);
+  background: var(--navy-deep);
+  border: 1px solid var(--gold-dim);
+  border-radius: 10px;
+  overflow:hidden;
+  position:relative;
+  transform: scale(0.86) translateY(18px);
+  opacity:0;
+  transition: transform .55s cubic-bezier(.2,.9,.25,1.1), opacity .45s ease;
+  box-shadow: 0 40px 100px -30px rgba(0,0,0,0.7);
+}
+.modal-overlay.is-open .modal-box{
+  transform: scale(1) translateY(0);
+  opacity:1;
+}
+
+.modal-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(198,160,72,0.2);
+}
+.modal-header h3{
+  font-family: var(--font-display);
+  color: var(--cream);
+  font-size: 1.4rem;
+  margin:0;
+  font-weight: 600;
+}
+.modal-close{
+  background:none; border:none; cursor:pointer;
+  color: var(--gold-bright);
+  width: 36px; height:36px;
+  border-radius: 50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size: 1.3rem;
+  transition: background .25s ease, transform .25s ease;
+}
+.modal-close:hover{ background: rgba(198,160,72,0.15); transform: rotate(90deg); }
+.modal-close:focus-visible{ outline: 2px solid var(--gold-bright); }
+
+.modal-video-frame{
+  position:relative;
+  width:100%;
+  aspect-ratio: 16/9;
+  background:#000;
+}
+.modal-video-frame iframe,
+.modal-video-frame video{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  border:0;
+}
+
+/* ==========================================================================
+   6. ДИДАКТИКАЛЫҚ ОЙЫНДАР БӨЛІМІ (Games section)
+   ========================================================================== */
+.games-section{
+  position:relative;
+  padding: 20px 24px 130px;
+  background: var(--sand);
+  overflow:hidden;
+}
+.games-section::before{
+  /* Тұлғалар бөлімінен бөлетін жіңішке алтын сызық */
+  content:"";
+  display:block;
+  width: 120px; height: 1px;
+  margin: 0 auto 90px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.games-grid{
+  max-width: var(--container);
+  margin: 0 auto;
+  position:relative; z-index:2;
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+}
+@media (max-width: 980px){
+  .games-grid{ grid-template-columns: repeat(2, 1fr); gap: 24px; }
+}
+@media (max-width: 560px){
+  .games-grid{ grid-template-columns: 1fr; max-width: 380px; }
+}
+
+/* Қазақи стильдегі ойын батырмасы */
+.game-btn{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap: 16px;
+  text-align:center;
+  text-decoration:none;
+  padding: 40px 20px 32px;
+  min-height: 190px;
+  border-radius: 8px;
+  background: radial-gradient(ellipse at 50% 0%, var(--navy-soft) 0%, var(--navy) 55%, var(--navy-deep) 100%);
+  border: 1px solid var(--gold-dim);
+  color: var(--cream);
+  overflow:hidden;
+  cursor:pointer;
+  transition: transform .4s cubic-bezier(.2,.8,.3,1), border-color .4s ease, box-shadow .4s ease;
+}
+.game-btn::before{
+  /* Ойын карточкасының артындағы алтын сәуле (glow) */
+  content:"";
+  position:absolute; inset: 20% 30%;
+  background: radial-gradient(circle, var(--gold-bright) 0%, transparent 70%);
+  opacity: 0.16;
+  filter: blur(22px);
+  transition: opacity .45s ease, transform .45s ease;
+  z-index:0;
+}
+.game-btn:hover, .game-btn:focus-visible{
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--gold);
+  box-shadow: 0 20px 46px -18px rgba(8,20,38,0.55);
+  outline:none;
+}
+.game-btn:hover::before{ opacity: 0.45; transform: scale(1.2); }
+
+/* Бұрыштардағы жіңішке ою-өрнек рамка */
+.game-btn::after{
+  content:"";
+  position:absolute; inset: 8px;
+  border: 1px solid rgba(233,201,120,0.22);
+  border-radius: 5px;
+  pointer-events:none;
+  z-index:0;
+}
+
+.game-btn-icon{
+  position:relative; z-index:1;
+  width: 46px; height: 46px;
+  display:flex; align-items:center; justify-content:center;
+}
+.game-btn-icon svg{ width:100%; height:100%; }
+
+.game-btn-label{
+  position:relative; z-index:1;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
+}
+.game-btn-sub{
+  position:relative; z-index:1;
+  font-size: 0.78rem;
+  color: var(--gold-bright);
+  opacity: 0.75;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   7. ҚОЮ КӨК АНИМАЦИЯЛЫ ФОН (dark-section) — 3D гид, Викторина және Шежіре бөлімдеріне ортақ
+   ========================================================================== */
+.dark-section{
+  position:relative;
+  overflow:hidden;
+  background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy) 55%, var(--navy-deep) 100%);
+}
+
+/* Анимациялық қазақы ою-өрнек фон — ақ/бос фон болмас үшін баяу қозғалатын өрнек қабаты */
+.dark-section .ornament-anim-layer{
+  position:absolute; inset: -10%;
+  z-index:0;
+  opacity: 0.16;
+  pointer-events:none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cg fill='none' stroke='%23E9C978' stroke-width='1.6'%3E%3Cpath d='M30 170 C30 110, 80 110, 80 70 C80 30, 40 30, 40 5'/%3E%3Cpath d='M170 170 C170 110, 120 110, 120 70 C120 30, 160 30, 160 5'/%3E%3Ccircle cx='100' cy='100' r='4' fill='%23E9C978' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 260px 260px;
+  animation: driftOrnament 46s linear infinite;
+}
+@keyframes driftOrnament{
+  from{ background-position: 0 0; }
+  to{ background-position: 520px 260px; }
+}
+/* Баяу айналып тұратын алтын сәуле — фонға тереңдік беру үшін */
+.dark-section .glow-orbit{
+  position:absolute;
+  top:50%; left:50%;
+  width: 900px; height:900px;
+  margin:-450px 0 0 -450px;
+  z-index:0;
+  pointer-events:none;
+  background: radial-gradient(circle, rgba(233,201,120,0.14) 0%, transparent 60%);
+  animation: orbitSpin 40s ease-in-out infinite;
+}
+@keyframes orbitSpin{
+  0%,100%{ transform: rotate(0deg) scale(1); }
+  50%{ transform: rotate(180deg) scale(1.15); }
+}
+
+.dark-section .section-head h2,
+.dark-section .section-head p{ position:relative; z-index:2; }
+.dark-section .section-head h2{ color: var(--cream); }
+.dark-section .section-head p{ color: rgba(245,238,223,0.72); }
+
+/* ==========================================================================
+   8. 3D ГИД БӨЛІМІ (Ұлттық бұйымдар — 3D гид)
+   ========================================================================== */
+.guide3d-section{
+  padding: 120px 24px 130px;
+}
+
+.objects-grid{
+  max-width: 900px;
+  margin: 0 auto;
+  position:relative; z-index:2;
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px 34px;
+}
+@media (max-width: 720px){
+  .objects-grid{ grid-template-columns: repeat(2, 1fr); max-width: 420px; gap: 24px; }
+}
+
+.object-btn{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 14px;
+  padding: 22px 14px 20px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(233,201,120,0.06) 0%, rgba(8,20,38,0.3) 100%);
+  border: 1px solid var(--gold-dim);
+  cursor:pointer;
+  text-align:center;
+  transition: transform .4s cubic-bezier(.2,.8,.3,1), border-color .4s ease, box-shadow .4s ease;
+}
+.object-btn::after{
+  content:"";
+  position:absolute; inset: 6px;
+  border: 1px solid rgba(233,201,120,0.2);
+  border-radius: 7px;
+  pointer-events:none;
+}
+.object-btn:hover, .object-btn:focus-visible{
+  transform: translateY(-6px);
+  border-color: var(--gold);
+  box-shadow: 0 20px 44px -18px rgba(0,0,0,0.6);
+  outline:none;
+}
+
+.object-thumb-wrap{
+  position:relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 6px;
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.object-thumb-wrap::before{
+  content:"";
+  position:absolute; inset:10%;
+  background: radial-gradient(circle, var(--gold-bright) 0%, transparent 68%);
+  opacity: 0.2;
+  filter: blur(14px);
+  transition: opacity .4s ease, transform .4s ease;
+  z-index:0;
+}
+.object-btn:hover .object-thumb-wrap::before{ opacity: 0.5; transform: scale(1.18); }
+.object-thumb{
+  position:relative; z-index:1;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  transition: transform .5s cubic-bezier(.2,.7,.3,1);
+  /* СУРЕТ ТАЛАБЫ: фонсыз (transparent PNG) заттың суреті */
+}
+.object-btn:hover .object-thumb{ transform: scale(1.1); }
+
+.object-label{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--cream);
+}
+
+/* 3D модаль терезесі — model-viewer компонентін көрсетеді */
+.modal-3d-frame{
+  position:relative;
+  width:100%;
+  aspect-ratio: 4/3;
+  background: radial-gradient(ellipse at 50% 30%, #16335C 0%, #081426 100%);
+}
+.modal-3d-frame model-viewer{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  --poster-color: transparent;
+}
+
+/* ==========================================================================
+   9. ВИКТОРИНА БӨЛІМІ (Орал қаласы туралы білім сынағы)
+   ========================================================================== */
+.quiz-section{
+  padding: 120px 24px 140px;
+}
+.quiz-intro-note{
+  position:relative; z-index:2;
+  max-width: 640px;
+  margin: -20px auto 50px;
+  text-align:center;
+  font-size: 0.85rem;
+  color: rgba(245,238,223,0.65);
+}
+
+/* ---- I БӨЛІМ: сәйкестендіру ---- */
+.quiz-part-title{
+  position:relative; z-index:2;
+  max-width: var(--container);
+  margin: 0 auto 26px;
+  text-align:center;
+  font-family: var(--font-display);
+  font-weight:600;
+  font-size: 1.3rem;
+  color: var(--gold-bright);
+}
+.quiz-part-title span{
+  display:block;
+  font-family: var(--font-body);
+  font-weight:400;
+  font-size: 0.78rem;
+  color: rgba(245,238,223,0.6);
+  margin-top: 4px;
+  letter-spacing: 0.03em;
+}
+
+.quiz-match-wrap{
+  position:relative; z-index:2;
+  max-width: 760px;
+  margin: 0 auto 90px;
+}
+
+/* Қазақи стильдегі түрлі-түсті батырмалар (терминдер) */
+.quiz-match-pills{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap: 12px;
+  padding: 18px;
+  margin-bottom: 30px;
+  background: rgba(8,20,38,0.35);
+  border: 1px solid var(--gold-dim);
+  border-radius: 14px;
+}
+.match-pill{
+  --pc: var(--gold);
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  background: var(--pc);
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight:600;
+  font-size: 0.88rem;
+  letter-spacing: 0.01em;
+  cursor:pointer;
+  box-shadow: 0 8px 18px -8px rgba(0,0,0,0.5);
+  transition: transform .25s ease, box-shadow .25s ease, opacity .25s ease;
+}
+.match-pill:hover{ transform: translateY(-2px); }
+.match-pill.is-selected{
+  box-shadow: 0 0 0 3px var(--cream), 0 8px 18px -8px rgba(0,0,0,0.6);
+  transform: translateY(-2px);
+}
+.match-pill.is-used{
+  opacity: 0.25;
+  cursor:default;
+  pointer-events:none;
+}
+
+.quiz-match-row{
+  display:grid;
+  grid-template-columns: 190px 1fr;
+  align-items:center;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+@media (max-width: 640px){
+  .quiz-match-row{ grid-template-columns: 1fr; }
+}
+.match-box{
+  min-height: 52px;
+  border-radius: 8px;
+  border: 1.5px dashed var(--gold-dim);
+  background: rgba(233,201,120,0.05);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  color: var(--cream);
+  font-weight:600;
+  font-size: 0.88rem;
+  text-align:center;
+  padding: 6px 10px;
+  transition: border-color .25s ease, background .25s ease, transform .2s ease;
+}
+.match-box:hover{ border-color: var(--gold-bright); transform: translateY(-2px); }
+.match-box.is-filled{
+  border-style: solid;
+  color:#fff;
+  background: var(--pc, var(--gold));
+}
+.match-box.is-correct{ border: 2px solid #4CAF6D; box-shadow: 0 0 0 2px rgba(76,175,109,0.3); }
+.match-box.is-incorrect{ border: 2px solid #D8564F; box-shadow: 0 0 0 2px rgba(216,86,79,0.3); }
+.match-desc{
+  margin:0;
+  font-size: 0.85rem;
+  line-height:1.5;
+  color: rgba(245,238,223,0.85);
+}
+
+/* ---- II БӨЛІМ: көп таңдаулы сұрақтар ---- */
+.quiz-mcq-wrap{
+  position:relative; z-index:2;
+  max-width: 760px;
+  margin: 0 auto;
+  display:flex;
+  flex-direction:column;
+  gap: 22px;
+}
+.quiz-mcq-card{
+  padding: 22px 24px;
+  border-radius: 12px;
+  background: rgba(8,20,38,0.35);
+  border: 1px solid var(--gold-dim);
+}
+.quiz-mcq-question{
+  color: var(--cream);
+  font-size: 0.95rem;
+  line-height:1.5;
+  margin: 0 0 16px;
+  font-weight:500;
+}
+.quiz-mcq-question b{ color: var(--gold-bright); }
+.quiz-mcq-options{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 480px){
+  .quiz-mcq-options{ grid-template-columns: 1fr; }
+}
+.mcq-option{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  text-align:left;
+  padding: 11px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--gold-dim);
+  background: rgba(233,201,120,0.04);
+  color: var(--cream);
+  font-size: 0.85rem;
+  cursor:pointer;
+  transition: border-color .25s ease, background .25s ease, transform .2s ease;
+}
+.mcq-option:hover{ border-color: var(--gold-bright); transform: translateY(-2px); }
+.mcq-option .opt-letter{
+  flex:0 0 auto;
+  width: 24px; height:24px;
+  border-radius:50%;
+  background: var(--navy-soft);
+  color: var(--gold-bright);
+  font-weight:700;
+  font-size: 0.75rem;
+  display:flex; align-items:center; justify-content:center;
+}
+.mcq-option.is-selected{ border-color: var(--gold-bright); background: rgba(233,201,120,0.16); }
+.mcq-option.is-correct{ border-color:#4CAF6D; background: rgba(76,175,109,0.16); }
+.mcq-option.is-incorrect{ border-color:#D8564F; background: rgba(216,86,79,0.16); }
+.mcq-option.is-disabled{ pointer-events:none; }
+
+/* ---- Тексеру батырмасы мен нәтиже панелі ---- */
+.quiz-actions{
+  position:relative; z-index:2;
+  max-width: 760px;
+  margin: 40px auto 0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 18px;
+}
+.quiz-check-btn{
+  padding: 15px 42px;
+  border-radius: 999px;
+  border: 1px solid var(--gold);
+  background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 100%);
+  color: var(--navy-deep);
+  font-family: var(--font-display);
+  font-weight:700;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  cursor:pointer;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.quiz-check-btn:hover{ transform: translateY(-2px); box-shadow: 0 14px 28px -12px rgba(233,201,120,0.5); }
+.quiz-check-btn:disabled{ opacity:0.5; cursor:default; transform:none; box-shadow:none; }
+
+.quiz-result{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  gap: 14px;
+  text-align:center;
+}
+.quiz-result.is-visible{ display:flex; }
+.quiz-result-score{
+  font-family: var(--font-display);
+  font-weight:700;
+  font-size: 1.8rem;
+  color: var(--cream);
+}
+.quiz-result-score span{ color: var(--gold-bright); }
+.quiz-result-msg{
+  font-size: 0.9rem;
+  color: rgba(245,238,223,0.75);
+  max-width: 460px;
+}
+
+/* Сертификат жүктеу батырмасы — тек 7+ балл алғанда пайда болады */
+.quiz-certificate-btn{
+  display:none;
+  align-items:center;
+  gap: 10px;
+  padding: 15px 34px;
+  border-radius: 999px;
+  border: 1px solid var(--gold-bright);
+  background: linear-gradient(180deg, #1D3F6E 0%, var(--navy-deep) 100%);
+  color: var(--gold-bright);
+  font-family: var(--font-display);
+  font-weight:700;
+  font-size: 1rem;
+  cursor:pointer;
+  box-shadow: 0 0 0 1px var(--gold-dim), 0 16px 34px -16px rgba(0,0,0,0.6);
+  transition: transform .3s ease, box-shadow .3s ease;
+  animation: certPulse 2.4s ease-in-out infinite;
+}
+.quiz-certificate-btn.is-visible{ display:inline-flex; }
+.quiz-certificate-btn:hover{ transform: translateY(-3px) scale(1.03); }
+@keyframes certPulse{
+  0%,100%{ box-shadow: 0 0 0 1px var(--gold-dim), 0 16px 34px -16px rgba(0,0,0,0.6); }
+  50%{ box-shadow: 0 0 0 4px rgba(233,201,120,0.25), 0 20px 40px -14px rgba(0,0,0,0.7); }
+}
+.quiz-certificate-btn svg{ width:20px; height:20px; fill: var(--gold-bright); }
+
+.quiz-retry-link{
+  background:none; border:none;
+  color: rgba(245,238,223,0.6);
+  font-size: 0.82rem;
+  text-decoration: underline;
+  cursor:pointer;
+}
+
+
+   10. ЖЕТІ АТА БӨЛІМІ (ағаш плита стиліндегі тігінен тізбек: Жүз → Ру → 7 ата → Сіз)
+   ========================================================================== */
+.shezhire-section{
+  padding: 110px 24px 140px;
+}
+
+/* Ағаш плита — орталықтағы негізгі тақта */
+.jetiata-plaque{
+  position:relative; z-index:2;
+  max-width: 480px;
+  margin: 0 auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* Жоғарғы ою-өрнек безендіру жолағы (ағаш тақтаның басы) */
+.jetiata-crest{
+  width: 100%;
+  max-width: 420px;
+  padding: 16px 22px;
+  margin-bottom: -34px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #8A6A2E 0%, #6E5222 100%);
+  border: 1px solid rgba(233,201,120,0.5);
+  box-shadow: 0 14px 30px -12px rgba(0,0,0,0.55);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:3;
+}
+.jetiata-crest svg{ width:100%; height:22px; }
+
+/* Дөңгелек медальон — ЖҮЗ өрісі */
+.jetiata-medallion{
+  position:relative;
+  z-index:2;
+  width: 168px; height:168px;
+  border-radius:50%;
+  background: radial-gradient(circle at 50% 40%, #7C5D28 0%, #5C441C 100%);
+  border: 3px double rgba(233,201,120,0.55);
+  box-shadow: 0 20px 40px -16px rgba(0,0,0,0.6), inset 0 0 0 8px rgba(8,20,38,0.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom: 14px;
+}
+.jetiata-medallion .jetiata-field{
+  width: 78%;
+  text-align:center;
+}
+.jetiata-field-label{
+  display:block;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--gold-bright);
+  opacity:0.75;
+  margin-bottom: 4px;
+}
+.jetiata-medallion input{
+  width:100%;
+  background:transparent;
+  border:none;
+  border-bottom: 1px solid rgba(233,201,120,0.5);
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-weight:600;
+  font-size: 1rem;
+  text-align:center;
+  padding: 3px 2px 6px;
+  outline:none;
+}
+.jetiata-medallion input::placeholder{ color: rgba(245,238,223,0.45); }
+.jetiata-medallion input:focus{ border-color: var(--gold-bright); }
+
+/* РУ белгісі — үлкен төртбұрышты жапсырма */
+.jetiata-clan-badge{
+  position:relative; z-index:2;
+  width: 100%;
+  max-width: 300px;
+  margin: -10px auto 0;
+  padding: 16px 20px 14px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #8A6A2E 0%, #6E5222 100%);
+  border: 1px solid rgba(233,201,120,0.5);
+  box-shadow: 0 16px 34px -14px rgba(0,0,0,0.55);
+  text-align:center;
+}
+.jetiata-clan-badge input{
+  width:100%;
+  background:transparent;
+  border:none;
+  border-bottom: 1px solid rgba(233,201,120,0.6);
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-weight:700;
+  font-size: 1.3rem;
+  letter-spacing: 0.03em;
+  text-align:center;
+  padding: 4px 2px 7px;
+  outline:none;
+}
+.jetiata-clan-badge input::placeholder{ color: rgba(245,238,223,0.45); font-size:1rem; }
+.jetiata-clan-badge input:focus{ border-color: var(--gold-bright); }
+
+/* Тізбек — жеті ата тізімі, ортасында тік жолақ (spine) */
+.jetiata-chain{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width: 340px;
+  margin-top: 30px;
+  padding: 20px 0 0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 16px;
+  background: linear-gradient(180deg, rgba(233,201,120,0.14) 0%, rgba(233,201,120,0.05) 100%);
+  border-left: 1px solid rgba(233,201,120,0.3);
+  border-right: 1px solid rgba(233,201,120,0.3);
+}
+.jetiata-node{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  width: 88%;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #F2E8D6 0%, #E7D9BC 100%);
+  border: 1px solid rgba(198,160,72,0.6);
+  box-shadow: 0 10px 22px -10px rgba(0,0,0,0.5);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.jetiata-node:hover, .jetiata-node:focus-within{
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 16px 30px -12px rgba(0,0,0,0.6);
+}
+.jetiata-index{
+  flex: 0 0 auto;
+  width: 26px; height:26px;
+  border-radius:50%;
+  background: var(--navy);
+  color: var(--gold-bright);
+  font-family: var(--font-display);
+  font-weight:700;
+  font-size: 0.78rem;
+  display:flex; align-items:center; justify-content:center;
+}
+.jetiata-node input{
+  flex:1;
+  width:100%;
+  background:transparent;
+  border:none;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight:500;
+  font-size: 0.95rem;
+  text-align:center;
+  outline:none;
+}
+.jetiata-node input::placeholder{ color: rgba(36,27,16,0.45); }
+
+/* "Сіз" — тізбектің соңғы, ерекшеленген буыны */
+.jetiata-node.self{
+  background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 100%);
+  border-color: rgba(233,201,120,0.9);
+  margin-bottom: 26px;
+}
+.jetiata-node.self .jetiata-index{ background: var(--navy-deep); }
+.jetiata-node.self input{ font-family: var(--font-display); font-weight:700; font-size: 1.05rem; }
+.jetiata-node.self input::placeholder{ color: rgba(8,20,38,0.5); }
+
+/* Астыңғы ою-өрнек жолағы (ағаш тақтаның аяғы) */
+.jetiata-foot{
+  width: 100%;
+  max-width: 340px;
+  padding: 14px 22px;
+  margin-top: -6px;
+  border-radius: 0 0 14px 14px;
+  background: linear-gradient(180deg, #6E5222 0%, #8A6A2E 100%);
+  border: 1px solid rgba(233,201,120,0.5);
+  border-top:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.jetiata-foot svg{ width: 70%; height:18px; }
+
+@media (max-width: 520px){
+  .jetiata-medallion{ width:130px; height:130px; }
+  .jetiata-chain{ max-width: 92%; }
+  .jetiata-node{ width:94%; padding: 9px 14px; }
+}
+
+/* ==========================================================================
+   11. FOOTER
+   ========================================================================== */
+footer{
+  background: var(--navy-deep);
+  color: rgba(245,238,223,0.6);
+  text-align:center;
+  padding: 40px 24px;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+footer .foot-divider{
+  width:70px; height:1px; margin:0 auto 18px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+</style>
+</head>
+<body>
+
+<!-- ==========================================================================
+     HTML5 БЛОГІ
+     ========================================================================== -->
+
+<!-- ---------- HERO БӨЛІМІ ---------- -->
+<header class="hero" id="hero">
+  <div class="ornament-layer" aria-hidden="true">
+    <!-- Қошқар мүйіз стилінде жеңіл геометриялық SVG өрнек, opacity төмен -->
+    <svg viewBox="0 0 800 800" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="ram-horn" width="160" height="160" patternUnits="userSpaceOnUse">
+          <path d="M20 140 C20 90, 60 90, 60 60 C60 30, 30 30, 30 10" stroke="#C6A048" stroke-width="2" fill="none"/>
+          <path d="M140 140 C140 90, 100 90, 100 60 C100 30, 130 30, 130 10" stroke="#C6A048" stroke-width="2" fill="none"/>
+          <circle cx="80" cy="80" r="4" fill="#C6A048"/>
+        </pattern>
+      </defs>
+      <rect width="800" height="800" fill="url(#ram-horn)"/>
+    </svg>
+  </div>
+
+  <!-- Бұрыштық ою-өрнек -->
+  <svg class="corner-ornament tl" viewBox="0 0 130 130" aria-hidden="true">
+    <path d="M10 10 L10 60 C10 90 40 100 60 100 M10 10 L60 10 C90 10 100 40 100 60" stroke="#E9C978" stroke-width="1.5" fill="none"/>
+  </svg>
+  <svg class="corner-ornament br" viewBox="0 0 130 130" aria-hidden="true">
+    <path d="M10 10 L10 60 C10 90 40 100 60 100 M10 10 L60 10 C90 10 100 40 100 60" stroke="#E9C978" stroke-width="1.5" fill="none"/>
+  </svg>
+
+  <!-- Авторлық жазба: латын графикасында, оң жоғарғы бұрышта -->
+  <p class="author-credit">Ermekqalieva Ainagúl Erniyazqyzy</p>
+
+  <p class="hero-eyebrow">Ұлттық рухани мұра порталы</p>
+  <h1 class="hero-title">Qundylyk.kz</h1>
+  <div class="hero-divider"></div>
+  <p class="hero-subtitle">Ұлы ойшылдар мұрасы — ұрпақтан ұрпаққа жалғасқан құндылық</p>
+
+  <!--
+    Аудио индикаторы: сайт ашылғанда автоматты түрде бір рет қосылуға тырысады.
+    Браузер autoplay-ді бөгесе (себебі: дыбыспен autoplay көбіне тек пайдаланушы
+    әрекетінен кейін рұқсат етіледі), JS бөлімі бірінші клик/түрту/басу сәтінде
+    дыбысты автоматты іске қосады — қосымша түймені басу қажет емес.
+  -->
+  <div class="audio-btn is-indicator" id="audioBtn" aria-live="polite">
+    <span class="wave-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+    <span id="audioBtnLabel">Дыбыс дайындалуда...</span>
+  </div>
+
+  <!--
+    АУДИО ФАЙЛ: audio/intro.mp3
+    Музыка бір рет ойналады, loop қосылмаған (JS бөлімін қараңыз).
+  -->
+  <audio id="introAudio" src="audio/intro.mp3" preload="auto"></audio>
+
+  <div class="scroll-hint" aria-hidden="true">
+    <span>ТӨМЕН ҚАРАҢЫЗ</span>
+    <span class="line"></span>
+  </div>
+</header>
+
+<!-- ---------- ТҰЛҒАЛАР БӨЛІМІ ---------- -->
+<section class="figures-section" id="figures">
+  <div class="section-head">
+    <h2>ТҰЛҒАЛАР ГАЛЕРЕЯСЫ</h2>
+    <p>Әр картаны басып, олардың өмірі мен мұрасы туралы қысқа бейнефильмді көріңіз.</p>
+  </div>
+
+  <div class="figures-grid" id="figuresGrid">
+    <!--
+      Әр карта data-* атрибуттары арқылы модальге ақпарат береді:
+      data-name   — тұлғаның аты
+      data-video  — жергілікті .mp4 файлдың жолы (video/ папкасынан)
+      data-type   — "local" (өз папкаңыздан видео қосу үшін тек осы түрі қолданылады)
+      Сурет жолын (src) және видео жолын (data-video) өз файлдарыңызбен ауыстырыңыз
+      (сурет — фонсыз transparent PNG, видео — video/ папкасындағы .mp4 файл).
+    -->
+    <article class="figure-card" tabindex="0"
+      data-name="Қасым Хан"
+      data-type="local"
+      data-video="video/qasym.mp4">
+      <div class="figure-portrait-wrap">
+        <!-- ↓ Осы жолды ауыстырыңыз: images/abai.png (фонсыз PNG) -->
+        <img class="figure-portrait" src="images/qasym.png" alt="ҚасымХанның портреті" loading="lazy">
+      </div>
+      <h3 class="figure-name">Қасым Хан</h3>
+      <p class="figure-role">Қазақ Хандығының іргетасын жалғастырушы, Батыр</p>
+      <span class="play-chip"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Видеоны қосу</span>
+    </article>
+
+    <article class="figure-card" tabindex="0"
+      data-name="Абылай Хан"
+      data-type="local"
+      data-video="video/abylai.mp4">
+      <div class="figure-portrait-wrap">
+        <!-- ↓ Осы жолды ауыстырыңыз: images/shoqan.png -->
+        <img class="figure-portrait" src="images/abylai.png" alt="Абылай Ханның портреті" loading="lazy">
+      </div>
+      <h3 class="figure-name">Абылай Хан</h3>
+      <p class="figure-role">Қазақ хандығының ұлы ханы, әйгілі қолбасшы, көрнекті мемлекет қайраткері және дипломат.</p>
+      <span class="play-chip"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Видеоны қосу</span>
+    </article>
+
+    <article class="figure-card" tabindex="0"
+      data-name="Томирис патшайым"
+      data-type="local"
+      data-video="video/tomiris.mp4">
+      <div class="figure-portrait-wrap">
+        <!-- ↓ Осы жолды ауыстырыңыз: images/ybyrai.png -->
+        <img class="figure-portrait" src="images/tomiris.png" alt="Томирис патшайымның портреті" loading="lazy">
+      </div>
+      <h3 class="figure-name">Томирис патшайым</h3>
+      <p class="figure-role">Ежелгі массагет тайпаларының ұлы патшайымы, шетел басқыншыларына (Кир патшаға) қарсы күрескен ержүрек жауынгер әрі қолбасшы.</p>
+      <span class="play-chip"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Видеоны қосу</span>
+    </article>
+
+    <article class="figure-card" tabindex="0"
+      data-name="Әлихан Бөкейхан"
+      data-type="local"
+      data-video="video/gaukhar.mp4">
+      <div class="figure-portrait-wrap">
+        <!-- ↓ Осы жолды ауыстырыңыз: images/akhmet.png -->
+        <img class="figure-portrait" src="images/gaukhar.png" alt="Әлихан Бөйкейханұлының портреті" loading="lazy">
+      </div>
+      <h3 class="figure-name">Әлихан Бөйкейханұлы</h3>
+      <p class="figure-role">Алаш қозғалысының көшбасшысы, Алашорда үкіметінің төрағасы, көрнекті қоғам және мемлекет қайраткері, ғалым әрі публицист</p>
+      <span class="play-chip"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Видеоны қосу</span>
+    </article>
+  </div>
+</section>
+
+<!-- ---------- ДИДАКТИКАЛЫҚ ОЙЫНДАР БӨЛІМІ ---------- -->
+<section class="games-section" id="games">
+  <div class="section-head">
+    <h2>Дидактикалық ойындар</h2>
+    <p>Тарихи тұлғалар туралы білімді ойын түрінде бекітіңіз — батырманы басып, сәйкес ойынды ашыңыз.</p>
+  </div>
+
+  <div class="games-grid">
+    <!--
+      ЕСКЕРТПЕ: төмендегі әр "game-btn" сілтемесінің href="#" мәнін
+      өзіңіздің ойын сілтемесіне ауыстырыңыз (мысалы, LearningApps, Wordwall
+      немесе жергілікті HTML файл жолы). target="_blank" сілтемені жаңа
+      бетте ашады, қаласаңыз бұл атрибутты алып тастауға болады.
+      game-btn-label мәтінін де өз ойындарыңыздың атына сай өзгертіңіз.
+    -->
+    <a class="game-btn" href="bes.html">
+      <span class="game-btn-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none">
+          <path d="M24 4 L30 18 L44 20 L34 30 L37 44 L24 37 L11 44 L14 30 L4 20 L18 18 Z"
+                stroke="#E9C978" stroke-width="1.6" stroke-linejoin="round" fill="rgba(233,201,120,0.08)"/>
+        </svg>
+      </span>
+      <span class="game-btn-label">1-ойын</span>
+      <span class="game-btn-sub">5-сынып</span>
+    </a>
+
+    <a class="game-btn" href="alty.html">
+      <span class="game-btn-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none">
+          <path d="M24 4 L30 18 L44 20 L34 30 L37 44 L24 37 L11 44 L14 30 L4 20 L18 18 Z"
+                stroke="#E9C978" stroke-width="1.6" stroke-linejoin="round" fill="rgba(233,201,120,0.08)"/>
+        </svg>
+      </span>
+      <span class="game-btn-label">2-ойын</span>
+      <span class="game-btn-sub">6-сынып</span>
+    </a>
+
+    <a class="game-btn" href="zheti.html">
+      <span class="game-btn-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none">
+          <path d="M24 4 L30 18 L44 20 L34 30 L37 44 L24 37 L11 44 L14 30 L4 20 L18 18 Z"
+                stroke="#E9C978" stroke-width="1.6" stroke-linejoin="round" fill="rgba(233,201,120,0.08)"/>
+        </svg>
+      </span>
+      <span class="game-btn-label">3-ойын</span>
+      <span class="game-btn-sub">7-сынып</span>
+    </a>
+
+    <a class="game-btn" href="segiz.html">
+      <span class="game-btn-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none">
+          <path d="M24 4 L30 18 L44 20 L34 30 L37 44 L24 37 L11 44 L14 30 L4 20 L18 18 Z"
+                stroke="#E9C978" stroke-width="1.6" stroke-linejoin="round" fill="rgba(233,201,120,0.08)"/>
+        </svg>
+      </span>
+      <span class="game-btn-label">4-ойын</span>
+      <span class="game-btn-sub">8-9 сынып</span>
+    </a>
+  </div>
+</section>
+
+<!-- ---------- 3D ГИД БӨЛІМІ (Ұлттық бұйымдар) ---------- -->
+<section class="guide3d-section dark-section" id="guide3d">
+  <!-- Анимациялық қазақы ою-өрнек фон қабаттары (ақ/бос фон болмас үшін) -->
+  <div class="ornament-anim-layer" aria-hidden="true"></div>
+  <div class="glow-orbit" aria-hidden="true"></div>
+
+  <div class="section-head">
+    <h2>3D гид: ұлттық бұйымдар әлемі</h2>
+    <p>Батырманы басып, әр бұйымды үш өлшемде айналдырып қарап, тарихымен танысыңыз.</p>
+  </div>
+
+  <div class="objects-grid">
+    <!--
+      Әр батырма data-* атрибуттары арқылы 3D модальге ақпарат береді:
+      data-name  — бұйымның аты
+      data-model — жергілікті .glb/.gltf 3D модель файлының жолы (models/ папкасынан)
+      Сурет жолын (src) өз файлдарыңызбен ауыстырыңыз (фонсыз, transparent PNG),
+      ал data-model мәнін өз 3D модель файлыңызбен ауыстырыңыз.
+    -->
+<a href="https://sketchfab.com/3d-models/kazakh-dombra-c75f815bb74f426a9d923642c52f8f9a" target="_blank" class="object-btn" data-name="Домбыра" data-model="models/dombyra.glb">
+  <span class="object-thumb-wrap">
+    <img class="object-thumb" src="images/dombyra.png" alt="Домбыра" loading="lazy">
+  </span>
+  <span class="object-label">Домбыра</span>
+</a>
+
+<a href="https://sketchfab.com/3d-models/kazakh-qobyz-kobyz-c94229e78d834bd4bb465c287d7f01c1" target="_blank" class="object-btn" data-name="Қобыз" data-model="models/dombyra.glb">
+  <span class="object-thumb-wrap">
+    <img class="object-thumb" src="images/qobyz.png" alt="Қобыз" loading="lazy">
+  </span>
+  <span class="object-label">Қобыз</span>
+</a>
+
+<a href="https://sketchfab.com/3d-models/saukele-ethno-variant-traditional-headdress-e08bfcf708624be8a5c83e2bd6ce2241" target="_blank" class="object-btn" data-name="Saukele" data-model="models/dombyra.glb">
+  <span class="object-thumb-wrap">
+    <img class="object-thumb" src="images/saukele.png" alt="Қобыз" loading="lazy">
+  </span>
+  <span class="object-label">Сәукеле</span>
+</a>
+
+<a href="https://sketchfab.com/3d-models/taqiya-yellow-f-kazakh-traditional-headdress-78a402f6ac3d41bd9c8f581b39a5345e" target="_blank" class="object-btn" data-name="Saukele" data-model="models/dombyra.glb">
+  <span class="object-thumb-wrap">
+    <img class="object-thumb" src="images/taqiya.png" alt="Қобыз" loading="lazy">
+  </span>
+  <span class="object-label">Тақия</span>
+</a>
+
+<a href="https://sketchfab.com/3d-models/astau-tabaq-67c0e9892dc84e45b0f949c31103f768" target="_blank" class="object-btn" data-name="Saukele" data-model="models/dombyra.glb">
+  <span class="object-thumb-wrap">
+    <img class="object-thumb" src="images/astau.png" alt="Қобыз" loading="lazy">
+  </span>
+  <span class="object-label">Астау</span>
+</a>
+
+<a href="https://sketchfab.com/3d-models/kazakh-kylysh-sword-efddb87290564f8b9b49f5c073d173ac" target="_blank" class="object-btn" data-name="Saukele" data-model="models/dombyra.glb">
+  <span class="object-thumb-wrap">
+    <img class="object-thumb" src="images/qylysh.png" alt="Қобыз" loading="lazy">
+  </span>
+  <span class="object-label">Қылыш</span>
+</a>
+  </div>
+</section>
+
+<!-- ---------- ВИКТОРИНА БӨЛІМІ ---------- -->
+<section class="quiz-section dark-section" id="quiz">
+  <!-- Анимациялық қазақы ою-өрнек фон қабаттары -->
+  <div class="ornament-anim-layer" aria-hidden="true"></div>
+  <div class="glow-orbit" aria-hidden="true"></div>
+
+  <div class="section-head">
+    <h2>Білім сынағы: Орал қаласы</h2>
+    <p>Орал қаласы мен оның тарихи тұлғалары туралы білімді тексеріңіз. Жалпы ұпай — 10, сертификат алу үшін кемінде 7 ұпай жинау керек.</p>
+  </div>
+
+  <!-- ================= I БӨЛІМ: СӘЙКЕСТЕНДІРУ ================= -->
+  <p class="quiz-part-title">I. Тұлғаларды сәйкестендіріңіз
+    <span>Алдымен батырманы, содан кейін оған сәйкес анықтаманың қасындағы бос ұяшықты басыңыз</span>
+  </p>
+
+  <div class="quiz-match-wrap">
+    <!--
+      СӘЙКЕСТЕНДІРУ ЛОГИКАСЫ: әр "match-pill" батырмасы data-id арқылы
+      анықталады. Әр "quiz-match-row" — data-answer атрибутында дұрыс
+      жауаптың data-id мәні жазылған. Пайдаланушы алдымен пилл батырманы,
+      содан кейін бос ұяшықты басады — JS блогы соларды сәйкестендіреді.
+    -->
+    <div class="quiz-match-pills" id="matchPills">
+      <button type="button" class="match-pill" data-id="tokai" style="--pc:#2E6B8F">Ғабдолла Тоқай</button>
+      <button type="button" class="match-pill" data-id="sholokhov" style="--pc:#B1502D">Михаил Шолохов</button>
+      <button type="button" class="match-pill" data-id="manshuk" style="--pc:#3B8F5C">Мәншүк Мәметова</button>
+      <button type="button" class="match-pill" data-id="pugachev" style="--pc:#7A2E4D">Емельян Пугачев</button>
+    </div>
+
+    <div class="quiz-match-rows" id="matchRows">
+      <div class="quiz-match-row">
+        <div class="match-box" data-answer="pugachev"></div>
+        <p class="match-desc">1773–1775 жылдардағы шаруалар көтерілісінің жетекшісі, Оралда штабы болған</p>
+      </div>
+      <div class="quiz-match-row">
+        <div class="match-box" data-answer="tokai"></div>
+        <p class="match-desc">Балалық шағы мен ақын ретіндегі шығармашылық жолы Оралмен тығыз байланысты татар классигі</p>
+      </div>
+      <div class="quiz-match-row">
+        <div class="match-box" data-answer="manshuk"></div>
+        <p class="match-desc">Ұлы Отан соғысының батыры, Оралда өсіп-өнген пулеметші қыз</p>
+      </div>
+      <div class="quiz-match-row">
+        <div class="match-box" data-answer="sholokhov"></div>
+        <p class="match-desc">«Тынық Дон» романының авторы, соғыс жылдарында Орал өңірінде тұрып, шығармалар жазған жазушы</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= II БӨЛІМ: КӨП ТАҢДАУЛЫ СҰРАҚТАР ================= -->
+  <p class="quiz-part-title">II. Дұрыс жауапты таңдаңыз</p>
+
+  <div class="quiz-mcq-wrap" id="mcqWrap">
+    <!-- data-correct атрибутында дұрыс нұсқаның әрпі (a/b/v/g) жазылған -->
+    <div class="quiz-mcq-card" data-correct="b">
+      <p class="quiz-mcq-question">1. Орал қаласы қандай екі құрлықтың шекарасында немесе түйіскен жерінде орналасқан?</p>
+      <div class="quiz-mcq-options">
+        <button type="button" class="mcq-option" data-opt="a"><span class="opt-letter">А</span>Азия мен Африка</button>
+        <button type="button" class="mcq-option" data-opt="b"><span class="opt-letter">Б</span>Еуропа мен Азия</button>
+        <button type="button" class="mcq-option" data-opt="v"><span class="opt-letter">В</span>Солтүстік және Оңтүстік Америка</button>
+        <button type="button" class="mcq-option" data-opt="g"><span class="opt-letter">Г</span>Еуропа мен Австралия</button>
+      </div>
+    </div>
+
+    <div class="quiz-mcq-card" data-correct="a">
+      <p class="quiz-mcq-question">2. 1833 жылы «Пугачев бүлігінің тарихы» еңбегіне мәлімет жинау үшін Оралға арнайы келген орыс классигі кім?</p>
+      <div class="quiz-mcq-options">
+        <button type="button" class="mcq-option" data-opt="a"><span class="opt-letter">А</span>А. С. Пушкин</button>
+        <button type="button" class="mcq-option" data-opt="b"><span class="opt-letter">Б</span>Л. Н. Толстой</button>
+        <button type="button" class="mcq-option" data-opt="v"><span class="opt-letter">В</span>М. Ю. Лермонтов</button>
+        <button type="button" class="mcq-option" data-opt="g"><span class="opt-letter">Г</span>А. П. Чехов</button>
+      </div>
+    </div>
+
+    <div class="quiz-mcq-card" data-correct="v">
+      <p class="quiz-mcq-question">3. 1775 жылы Орал қаласының бұрынғы «Яицкий городок» атауын өзгерту туралы жарлық шығарған Ресей патшайымы кім?</p>
+      <div class="quiz-mcq-options">
+        <button type="button" class="mcq-option" data-opt="a"><span class="opt-letter">А</span>I Анна Иоанновна</button>
+        <button type="button" class="mcq-option" data-opt="b"><span class="opt-letter">Б</span>I Елизавета</button>
+        <button type="button" class="mcq-option" data-opt="v"><span class="opt-letter">В</span>II Екатерина</button>
+        <button type="button" class="mcq-option" data-opt="g"><span class="opt-letter">Г</span>I Екатерина</button>
+      </div>
+    </div>
+
+    <div class="quiz-mcq-card" data-correct="b">
+      <p class="quiz-mcq-question">4. Ұлы Отан соғысы жылдарында мергендігімен көзге түскен, Кеңес Одағының Батыры атанған, Оралдағы медициналық училищені бітірген қазақ қызы:</p>
+      <div class="quiz-mcq-options">
+        <button type="button" class="mcq-option" data-opt="a"><span class="opt-letter">А</span>Әлия Молдағұлова</button>
+        <button type="button" class="mcq-option" data-opt="b"><span class="opt-letter">Б</span>Мәншүк Мәметова</button>
+        <button type="button" class="mcq-option" data-opt="v"><span class="opt-letter">В</span>Хиуаз Доспанова</button>
+        <button type="button" class="mcq-option" data-opt="g"><span class="opt-letter">Г</span>Зылиха Тамшыбаева</button>
+      </div>
+    </div>
+
+    <div class="quiz-mcq-card" data-correct="g">
+      <p class="quiz-mcq-question">5. Орал қаласы Батыс Қазақстан облысының қай бөлігінде орналасқан және оның жанынан өтетін басты кеме жүзетін өзен қайсысы?</p>
+      <div class="quiz-mcq-options">
+        <button type="button" class="mcq-option" data-opt="a"><span class="opt-letter">А</span>Ертіс</button>
+        <button type="button" class="mcq-option" data-opt="b"><span class="opt-letter">Б</span>Есіл</button>
+        <button type="button" class="mcq-option" data-opt="v"><span class="opt-letter">В</span>Сырдария</button>
+        <button type="button" class="mcq-option" data-opt="g"><span class="opt-letter">Г</span>Жайық (Орал өзені)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ТЕКСЕРУ ЖӘНЕ НӘТИЖЕ ================= -->
+  <div class="quiz-actions">
+    <button type="button" class="quiz-check-btn" id="quizCheckBtn">Тексеру</button>
+
+    <div class="quiz-result" id="quizResult">
+      <p class="quiz-result-score">Ұпайыңыз: <span id="quizScoreText">0/10</span></p>
+      <p class="quiz-result-msg" id="quizResultMsg"></p>
+
+      <!--
+        СЕРТИФИКАТ: 7+ ұпай жиналғанда осы батырма көрінеді және басқанда
+        certificate/ папкасындағы файлды автоматты жүктейді.
+        ЖОЛДЫ АУЫСТЫРЫҢЫЗ: certificate/certificate.pdf — өз сертификат файлыңыз.
+      -->
+      <button type="button" class="quiz-certificate-btn" id="certificateBtn">
+        <svg viewBox="0 0 24 24"><path d="M12 2 15 8 22 9 17 14 18 21 12 17.5 6 21 7 14 2 9 9 8Z"/></svg>
+        Жарайсың, туған жеріңді жақсы біледі екенсің! Сертификатты жүктеу
+      </button>
+
+      <button type="button" class="quiz-retry-link" id="quizRetryBtn">Қайта тапсыру</button>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- ШЕЖІРЕ БӨЛІМІ ---------- -->
+<section class="shezhire-section dark-section" id="shezhire">
+  <!-- Анимациялық қазақы ою-өрнек фон қабаттары -->
+  <div class="ornament-anim-layer" aria-hidden="true"></div>
+  <div class="glow-orbit" aria-hidden="true"></div>
+
+  <div class="section-head">
+    <h2>Жеті ата</h2>
+    <p>Жүзіңізден, руыңыздан бастап, жетінші атаңыздан өзіңізге дейінгі шежіре тізбегін толтырыңыз.</p>
+  </div>
+
+  <!--
+    ЖЕТІ АТА ТАҚТАСЫ: жоғарыдан төменге қарай — Жүз, Ру, содан кейін
+    жетінші атадан бастап (ең қашық ата) бірінші атаға дейін, соңында
+    "Сіз" өрісі. Барлық input өрістерін оқушы өзі толтырады.
+    Placeholder мәтіндерін қаласаңыз өзгертуге болады.
+  -->
+  <div class="jetiata-plaque">
+    <!-- Жоғарғы ою-өрнек жолағы -->
+    <div class="jetiata-crest" aria-hidden="true">
+      <svg viewBox="0 0 400 24" preserveAspectRatio="xMidYMid meet">
+        <g fill="none" stroke="#E9C978" stroke-width="1.4">
+          <path d="M10 12 C60 -4, 100 28, 150 12 C200 -4, 240 28, 290 12 C330 -4, 360 20, 390 12"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- ЖҮЗ — дөңгелек медальон -->
+    <div class="jetiata-medallion">
+      <div class="jetiata-field">
+        <span class="jetiata-field-label">ЖҮЗ</span>
+        <input type="text" placeholder="Мыс. Орта жүз">
+      </div>
+    </div>
+
+    <!-- РУ — үлкен жапсырма -->
+    <div class="jetiata-clan-badge">
+      <input type="text" placeholder="Руыңызды жазыңыз">
+    </div>
+
+    <!-- ЖЕТІ АТА тізбегі: 7-атадан 1-атаға дейін, соңында Сіз -->
+    <div class="jetiata-chain">
+      <div class="jetiata-node"><span class="jetiata-index">7</span><input type="text" placeholder="7-ата"></div>
+      <div class="jetiata-node"><span class="jetiata-index">6</span><input type="text" placeholder="6-ата"></div>
+      <div class="jetiata-node"><span class="jetiata-index">5</span><input type="text" placeholder="5-ата"></div>
+      <div class="jetiata-node"><span class="jetiata-index">4</span><input type="text" placeholder="4-ата"></div>
+      <div class="jetiata-node"><span class="jetiata-index">3</span><input type="text" placeholder="3-ата"></div>
+      <div class="jetiata-node"><span class="jetiata-index">2</span><input type="text" placeholder="2-ата"></div>
+      <div class="jetiata-node"><span class="jetiata-index">1</span><input type="text" placeholder="1-ата (әкеңіз)"></div>
+      <div class="jetiata-node self"><span class="jetiata-index">✦</span><input type="text" placeholder="Сіздің атыңыз"></div>
+    </div>
+
+    <!-- Астыңғы ою-өрнек жолағы -->
+    <div class="jetiata-foot" aria-hidden="true">
+      <svg viewBox="0 0 300 18" preserveAspectRatio="xMidYMid meet">
+        <g fill="none" stroke="#E9C978" stroke-width="1.2">
+          <path d="M5 9 C40 -3, 70 21, 105 9 C140 -3, 170 21, 205 9 C230 -3, 265 15, 295 9"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- 3D МОДАЛЬ ТЕРЕЗЕСІ ---------- -->
+<div class="modal-overlay" id="modal3dOverlay" role="dialog" aria-modal="true" aria-labelledby="modal3dTitle">
+  <div class="modal-box" id="modal3dBox">
+    <div class="modal-header">
+      <h3 id="modal3dTitle">Бұйым аты</h3>
+      <button class="modal-close" id="modal3dCloseBtn" aria-label="Жабу">&times;</button>
+    </div>
+    <div class="modal-3d-frame" id="modal3dFrame">
+      <!-- <model-viewer> элементі JS арқылы динамикалық түрде осында енгізіледі -->
+    </div>
+  </div>
+</div>
+
+<!-- ---------- ВИДЕО МОДАЛЬ ТЕРЕЗЕСІ ---------- -->
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-header">
+      <h3 id="modalTitle">Тұлға аты</h3>
+      <button class="modal-close" id="modalCloseBtn" aria-label="Жабу">&times;</button>
+    </div>
+    <div class="modal-video-frame" id="modalVideoFrame">
+      <!-- Видео элементі JS арқылы динамикалық түрде осында енгізіледі -->
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-divider"></div>
+  <p>Qundylyk.kz — қазақ халқының рухани құндылықтары мен ұлы тұлғаларын насихаттау жобасы</p>
+</footer>
+
+<script>
+/* ==========================================================================
+   VANILLA JAVASCRIPT БЛОГІ
+   ========================================================================== */
+
+/* ---------- 1. АУДИО: сайт ашылғанда АВТОМАТТЫ түрде, тек БІР РЕТ ойналатын логика ----------
+   Браузерлердің autoplay саясаты дыбыспен autoplay-ді көбіне бөгейді, сондықтан:
+   1) бет жүктелісімен бірден audio.play() шақырылады;
+   2) егер браузер бөгесе (play() promise reject болса), пайдаланушының беттегі
+      бірінші кез келген әрекетінде (клик, түрту, пернетақта) дыбыс дереу қосылады;
+   3) екі жағдайда да музыка бар-жоғы БІР РЕТ ойналады — loop жоқ, қайта қосылмайды. */
+(function initAudio(){
+  var audio = document.getElementById('introAudio');
+  var btn = document.getElementById('audioBtn');
+  var label = document.getElementById('audioBtnLabel');
+
+  audio.loop = false; // Талап бойынша: музыка ЕШҚАШАН қайталанбайды
+
+  var hasPlayed = false;   // дыбыс бір рет іске қосылғанын бақылайды
+  var hasFinished = false; // дыбыс толық аяқталғанын бақылайды
+
+  function markPlaying(){
+    btn.classList.add('is-playing');
+    label.textContent = 'Дыбыс ойналуда...';
+  }
+
+  function markBlocked(){
+    label.textContent = 'Дыбысты қосу үшін бетті түртіңіз';
+  }
+
+  function attemptPlay(){
+    if (hasPlayed || hasFinished) return; // тек бір-ақ рет іске қосуға тырысамыз
+    var playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(function(){
+        hasPlayed = true;
+        markPlaying();
+        removeGestureListeners();
+      }).catch(function(){
+        // Автоматты қосу бөгелді — пайдаланушының алғашқы әрекетін күтеміз
+        markBlocked();
+      });
+    }
+  }
+
+  function gestureFallback(){
+    attemptPlay();
+  }
+
+  function removeGestureListeners(){
+    ['click','touchstart','keydown','scroll'].forEach(function(evt){
+      document.removeEventListener(evt, gestureFallback);
+    });
+  }
+
+  // Бет жүктелісімен бірден автоматты қосуға тырысамыз
+  window.addEventListener('DOMContentLoaded', attemptPlay);
+
+  // Браузер бөгеген жағдайда — пайдаланушының бірінші әрекетінде іске қосамыз
+  ['click','touchstart','keydown','scroll'].forEach(function(evt){
+    document.addEventListener(evt, gestureFallback, { once:false, passive:true });
+  });
+
+  // Аудио аяқталған кезде — қайта ойналмайды, индикатор күйін жаңартамыз
+  audio.addEventListener('ended', function(){
+    hasFinished = true;
+    btn.classList.remove('is-playing');
+    btn.classList.add('is-disabled');
+    label.textContent = 'Дыбыс аяқталды';
+    removeGestureListeners();
+  });
+})();
+
+/* ---------- 2. ВИДЕО МОДАЛЬ ТЕРЕЗЕСІ ---------- */
+(function initModal(){
+  var overlay = document.getElementById('modalOverlay');
+  var box = document.getElementById('modalBox');
+  var titleEl = document.getElementById('modalTitle');
+  var frame = document.getElementById('modalVideoFrame');
+  var closeBtn = document.getElementById('modalCloseBtn');
+  var cards = document.querySelectorAll('.figure-card');
+
+  function openModal(name, src){
+    titleEl.textContent = name;
+    frame.innerHTML = ''; // алдыңғы видеоны тазалау
+
+    // Барлық видеолар тек жергілікті папкадан (мысалы video/abai.mp4) ойналады
+    var video = document.createElement('video');
+    video.src = src;
+    video.controls = true;
+    video.autoplay = true;
+    video.playsInline = true;
+    frame.appendChild(video);
+
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+
+  function closeModal(){
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+
+    // Видеоны толық тоқтату
+    var media = frame.querySelector('video');
+    if (media) { media.pause(); }
+    setTimeout(function(){ frame.innerHTML = ''; }, 400); // fade-out аяқталғанша күту
+  }
+
+  cards.forEach(function(card){
+    function trigger(){
+      var name = card.getAttribute('data-name');
+      var src = card.getAttribute('data-video');
+      openModal(name, src);
+    }
+    card.addEventListener('click', trigger);
+    card.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); trigger(); }
+    });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+
+  // Модальден тыс жерді басқанда жабу
+  overlay.addEventListener('click', function(e){
+    if (e.target === overlay) closeModal();
+  });
+
+  // Escape пернесімен жабу
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeModal();
+  });
+})();
+
+/* ---------- 3. 3D ГИД МОДАЛЬ ТЕРЕЗЕСІ (Ұлттық бұйымдар) ---------- */
+(function init3dModal(){
+  var overlay = document.getElementById('modal3dOverlay');
+  var titleEl = document.getElementById('modal3dTitle');
+  var frame = document.getElementById('modal3dFrame');
+  var closeBtn = document.getElementById('modal3dCloseBtn');
+  var buttons = document.querySelectorAll('.object-btn');
+
+  function openModal(name, modelSrc){
+    titleEl.textContent = name;
+    frame.innerHTML = ''; // алдыңғы 3D модельді тазалау
+
+    // <model-viewer> компоненті .glb/.gltf файлын жүктеп, айналдырып көрсетеді
+    var viewer = document.createElement('model-viewer');
+    viewer.setAttribute('src', modelSrc);
+    viewer.setAttribute('alt', name);
+    viewer.setAttribute('camera-controls', '');
+    viewer.setAttribute('auto-rotate', '');
+    viewer.setAttribute('rotation-per-second', '18deg');
+    viewer.setAttribute('shadow-intensity', '1');
+    viewer.setAttribute('exposure', '1');
+    viewer.setAttribute('interaction-prompt', 'none');
+    frame.appendChild(viewer);
+
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+
+  function closeModal(){
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+    setTimeout(function(){ frame.innerHTML = ''; }, 400); // fade-out аяқталғанша күту
+  }
+
+  buttons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var name = btn.getAttribute('data-name');
+      var modelSrc = btn.getAttribute('data-model');
+      openModal(name, modelSrc);
+    });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+
+  overlay.addEventListener('click', function(e){
+    if (e.target === overlay) closeModal();
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeModal();
+  });
+})();
+
+/* ---------- 4. ВИКТОРИНА: сәйкестендіру + көп таңдаулы сұрақтар + балл санау ---------- */
+(function initQuiz(){
+  var pillsWrap = document.getElementById('matchPills');
+  var rowsWrap = document.getElementById('matchRows');
+  var mcqWrap = document.getElementById('mcqWrap');
+  var checkBtn = document.getElementById('quizCheckBtn');
+  var resultBox = document.getElementById('quizResult');
+  var scoreText = document.getElementById('quizScoreText');
+  var resultMsg = document.getElementById('quizResultMsg');
+  var certBtn = document.getElementById('certificateBtn');
+  var retryBtn = document.getElementById('quizRetryBtn');
+  if (!pillsWrap || !mcqWrap) return;
+
+  var pills = Array.prototype.slice.call(pillsWrap.querySelectorAll('.match-pill'));
+  var boxes = Array.prototype.slice.call(rowsWrap.querySelectorAll('.match-box'));
+  var mcqCards = Array.prototype.slice.call(mcqWrap.querySelectorAll('.quiz-mcq-card'));
+  var selectedPill = null; // қазір таңдалған пилл (сәйкестендіру)
+
+  /* ---- Сәйкестендіру: пилл таңдау → ұяшыққа орналастыру ---- */
+  pills.forEach(function(pill){
+    pill.addEventListener('click', function(){
+      if (pill.classList.contains('is-used')) return;
+      pills.forEach(function(p){ p.classList.remove('is-selected'); });
+      selectedPill = pill;
+      pill.classList.add('is-selected');
+    });
+  });
+
+  boxes.forEach(function(box){
+    box.addEventListener('click', function(){
+      if (box.classList.contains('is-filled')) {
+        // Толтырылған ұяшықты қайта басса — тазаланады, пилл қайта қолжетімді болады
+        var usedId = box.dataset.filledId;
+        var usedPill = pills.filter(function(p){ return p.dataset.id === usedId; })[0];
+        if (usedPill) { usedPill.classList.remove('is-used'); }
+        box.classList.remove('is-filled');
+        box.style.setProperty('--pc', '');
+        box.textContent = '';
+        delete box.dataset.filledId;
+        return;
+      }
+      if (!selectedPill) return; // алдымен пилл таңдау керек
+      box.classList.add('is-filled');
+      box.style.setProperty('--pc', getComputedStyle(selectedPill).getPropertyValue('--pc'));
+      box.textContent = selectedPill.textContent;
+      box.dataset.filledId = selectedPill.dataset.id;
+      selectedPill.classList.add('is-used');
+      selectedPill.classList.remove('is-selected');
+      selectedPill = null;
+    });
+  });
+
+  /* ---- MCQ: бір ғана нұсқа таңдалады ---- */
+  mcqCards.forEach(function(card){
+    var options = Array.prototype.slice.call(card.querySelectorAll('.mcq-option'));
+    options.forEach(function(opt){
+      opt.addEventListener('click', function(){
+        options.forEach(function(o){ o.classList.remove('is-selected'); });
+        opt.classList.add('is-selected');
+        card.dataset.selected = opt.dataset.opt;
+      });
+    });
+  });
+
+  /* ---- Тексеру: балл санау (сәйкестендіру — 5 балл, MCQ — 5 балл, барлығы 10) ---- */
+  checkBtn.addEventListener('click', function(){
+    var matchCorrect = 0;
+    boxes.forEach(function(box){
+      var isRight = box.dataset.filledId === box.dataset.answer;
+      box.classList.remove('is-correct', 'is-incorrect');
+      box.classList.add(isRight ? 'is-correct' : 'is-incorrect');
+      if (isRight) matchCorrect++;
+    });
+
+    var mcqCorrect = 0;
+    mcqCards.forEach(function(card){
+      var correctOpt = card.dataset.correct;
+      var options = Array.prototype.slice.call(card.querySelectorAll('.mcq-option'));
+      options.forEach(function(opt){
+        opt.classList.add('is-disabled');
+        if (opt.dataset.opt === correctOpt) { opt.classList.add('is-correct'); }
+        else if (opt.classList.contains('is-selected')) { opt.classList.add('is-incorrect'); }
+      });
+      if (card.dataset.selected === correctOpt) mcqCorrect++;
+    });
+
+    // Сәйкестендіру бөлімі 5 баллға, MCQ бөлімі 5 баллға тең салмақталады (барлығы 10)
+    var rawMax = boxes.length + mcqCards.length; // 4 + 5 = 9
+    var rawScore = matchCorrect + mcqCorrect;
+    var scaledScore = Math.round((rawScore / rawMax) * 10);
+
+    scoreText.textContent = scaledScore + '/10';
+    resultBox.classList.add('is-visible');
+    checkBtn.disabled = true;
+
+    if (scaledScore >= 7) {
+      resultMsg.textContent = 'Тамаша нәтиже! Сертификатыңыз жаңа вкладкада автоматты түрде ашылды.';
+      certBtn.classList.add('is-visible');
+      // Сертификатты автоматты түрде жаңа вкладкада ашу
+      window.open('certificate/certificate.pdf', '_blank');
+    } else {
+      resultMsg.textContent = 'Жақсы әрекет! Тағы да қайталап, туған жеріңіз туралы білімді бекітіп көріңіз.';
+      certBtn.classList.remove('is-visible');
+    }
+
+    resultBox.scrollIntoView({ behavior:'smooth', block:'center' });
+  });
+
+  /* ---- Сертификат: 7+ балл алғанда, батырманы басқан кезде автоматты жүктеледі ---- */
+  certBtn.addEventListener('click', function(){
+    window.open('certificate/certificate.pdf', '_blank');
+  });
+
+  /* ---- Қайта тапсыру: барлық жауаптарды тазалау ---- */
+  retryBtn.addEventListener('click', function(){
+    boxes.forEach(function(box){
+      box.classList.remove('is-filled', 'is-correct', 'is-incorrect');
+      box.style.setProperty('--pc', '');
+      box.textContent = '';
+      delete box.dataset.filledId;
+    });
+    pills.forEach(function(p){ p.classList.remove('is-used', 'is-selected'); });
+    selectedPill = null;
+
+    mcqCards.forEach(function(card){
+      delete card.dataset.selected;
+      var options = Array.prototype.slice.call(card.querySelectorAll('.mcq-option'));
+      options.forEach(function(opt){
+        opt.classList.remove('is-selected', 'is-correct', 'is-incorrect', 'is-disabled');
+      });
+    });
+
+    resultBox.classList.remove('is-visible');
+    certBtn.classList.remove('is-visible');
+    checkBtn.disabled = false;
+  });
+})();
+</script>
+</body>
+</html>

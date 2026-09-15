@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <title>5-сынып: Асық ату және Көне дәуір құпиясы</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0b1e36, #163863);
+      color: #333;
+      margin: 0;
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    .header-box {
+      text-align: center;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+    .header-box h1 {
+      margin: 0 0 6px 0;
+      font-size: 24px;
+      color: #f5b041;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .header-box p {
+      margin: 0;
+      font-size: 15px;
+      opacity: 0.9;
+    }
+    .container {
+      background: #ffffff;
+      max-width: 900px;
+      width: 100%;
+      border-radius: 18px;
+      padding: 25px 30px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.35);
+      box-sizing: border-box;
+    }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 12px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      color: #0b1e36;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover {
+      background: #e2e8f0;
+    }
+    .tab-btn.active {
+      background: #0b1e36;
+      color: #f5b041;
+      border-color: #0b1e36;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .task-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #0b1e36;
+      margin-bottom: 6px;
+    }
+    .desc {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* 1-ТАПСЫРМА: Асық ату стилі */
+    .asyq-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .asyq-card {
+      background: #f8fafc;
+      border: 2px dashed #dcdfe6;
+      border-radius: 14px;
+      padding: 15px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .asyq-card:hover {
+      border-color: #f5b041;
+      background: #fffdf5;
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(245, 176, 65, 0.2);
+    }
+    .asyq-card.opened {
+      border: 2px solid #22c55e;
+      background: #f0fdf4;
+    }
+    .asyq-title {
+      font-weight: bold;
+      margin-top: 8px;
+      color: #0b1e36;
+      font-size: 15px;
+    }
+    .asyq-modal {
+      display: none;
+      background: #f8fafc;
+      border: 2px solid #f5b041;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 15px;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Викторина мен таңдау стильдері */
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .opt-btn {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      padding: 12px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: left;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+    .opt-btn:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+    .opt-btn.correct {
+      background: #dcfce7 !important;
+      border-color: #22c55e !important;
+      color: #15803d !important;
+      font-weight: bold;
+    }
+    .opt-btn.wrong {
+      background: #fee2e2 !important;
+      border-color: #ef4444 !important;
+      color: #b91c1c !important;
+    }
+
+    /* 2-ТАПСЫРМА: Сандықтар көрнекілігі */
+    .sandıq-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .sandıq-box {
+      background: #fff8eb;
+      border: 2px solid #e5b242;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .sandıq-box:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+    .sandıq-box.active {
+      border-color: #0b1e36;
+      background: #fef3c7;
+    }
+
+    .result-banner {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      color: #2e7d32;
+    }
+    .action-btn {
+      background: #f5b041;
+      color: #0b1e36;
+      border: none;
+      padding: 10px 24px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .action-btn:hover {
+      background: #d49f2b;
+    }
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header-box">
+  <h1>Қазақстан тарихы: 5-сынып</h1>
+  <p>«Ұлттық құндылықтар мен бабалар мұрасы» интерактивті сабағы</p>
+</div>
+
+<div class="container">
+  <!-- Вкладкалар -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(0)">1-ойын: «Асық ату» құпия сұрақтары</button>
+    <button class="tab-btn" onclick="switchTab(1)">2-ойын: Бабалар сандығы (Жәдігерлер сыры)</button>
+    <button class="tab-btn" onclick="switchTab(2)">3-ойын: Ботай және Тұлпар (Ұлттық мақтаныш)</button>
+  </div>
+
+  <!-- 1-ТАПСЫРМА: АСЫҚ АТУ ОЙЫНЫ -->
+  <div class="tab-content active" id="tab-0">
+    <div class="task-title">«Асық ату: Көне сақтар дәуіріне саяхат»</div>
+    <p class="desc">Кез келген асықты шертсеңіз, ішіндегі жасырын тарихи сауал ашылады. Әр асықтың құпиясын ашыңыз!</p>
+
+    <div class="asyq-board">
+      <!-- 1: Алшы -->
+      <div class="asyq-card" id="card-1" onclick="openAsyq(1)">
+        <svg width="60" height="60" viewBox="0 0 100 100">
+          <ellipse cx="50" cy="50" rx="35" ry="42" fill="#E5B242"/>
+          <path d="M 35 25 Q 50 15 65 25 Q 75 50 65 75 Q 50 85 35 75 Q 25 50 35 25" fill="#FCE08A"/>
+          <circle cx="50" cy="50" r="10" fill="#B37C1B" opacity="0.6"/>
+        </svg>
+        <div class="asyq-title">1. АЛШЫ түсті</div>
+      </div>
+
+      <!-- 2: Тәйке -->
+      <div class="asyq-card" id="card-2" onclick="openAsyq(2)">
+        <svg width="60" height="60" viewBox="0 0 100 100">
+          <ellipse cx="50" cy="50" rx="38" ry="40" fill="#3B82F6"/>
+          <path d="M 30 30 Q 50 20 70 30 Q 80 50 70 70 Q 50 80 30 70 Q 20 50 30 30" fill="#93C5FD"/>
+          <ellipse cx="50" cy="50" rx="6" ry="14" fill="#1D4ED8" opacity="0.6"/>
+        </svg>
+        <div class="asyq-title">2. ТӘЙКЕ түсті</div>
+      </div>
+
+      <!-- 3: Бүк -->
+      <div class="asyq-card" id="card-3" onclick="openAsyq(3)">
+        <svg width="60" height="60" viewBox="0 0 100 100">
+          <ellipse cx="50" cy="50" rx="42" ry="35" fill="#10B981"/>
+          <path d="M 25 35 Q 50 25 75 35 Q 85 50 75 65 Q 50 75 25 65 Q 15 50 25 35" fill="#6EE7B7"/>
+          <rect x="42" y="42" width="16" height="16" rx="4" fill="#047857" opacity="0.6"/>
+        </svg>
+        <div class="asyq-title">3. БҮК түсті</div>
+      </div>
+
+      <!-- 4: Шік -->
+      <div class="asyq-card" id="card-4" onclick="openAsyq(4)">
+        <svg width="60" height="60" viewBox="0 0 100 100">
+          <ellipse cx="50" cy="50" rx="40" ry="38" fill="#EC4899"/>
+          <path d="M 30 25 Q 50 35 70 25 Q 80 50 70 75 Q 50 65 30 75 Q 20 50 30 25" fill="#F472B6"/>
+          <circle cx="50" cy="50" r="12" fill="#BE185D" opacity="0.6"/>
+        </svg>
+        <div class="asyq-title">4. ШІК түсті</div>
+      </div>
+    </div>
+
+    <!-- Асықтың ішкі сұрақ панелі -->
+    <div class="asyq-modal" id="asyq-modal">
+      <h3 id="asyq-q-title" style="margin-top:0; color:#0b1e36;">Тапсырма таңдалды</h3>
+      <p id="asyq-question" style="font-size:15px; font-weight:600;"></p>
+      <div class="quiz-options" id="asyq-options"></div>
+    </div>
+  </div>
+
+  <!-- 2-ТАПСЫРМА: БАБАЛАР САНДЫҒЫ (ЖӘДІГЕРЛЕР) -->
+  <div class="tab-content" id="tab-1">
+    <div class="task-title">«Бабалар сандығы: Есік обасы жәдігерлері»</div>
+    <p class="desc">Қазақы оюлы сандықтардың үстін шертіп, бабаларымыздың дүниетанымы мен қасиетті жәдігерлерін зерттеңіз.</p>
+
+    <div class="sandıq-grid">
+      <div class="sandıq-box" onclick="openSandiq(1)">
+        <svg width="70" height="50" viewBox="0 0 120 80">
+          <rect x="10" y="25" width="100" height="50" rx="6" fill="#854d0e"/>
+          <path d="M 10 25 Q 60 5 110 25 Z" fill="#a16207"/>
+          <circle cx="60" cy="45" r="7" fill="#facc15"/>
+          <line x1="10" y1="25" x2="110" y2="25" stroke="#facc15" stroke-width="3"/>
+        </svg>
+        <div style="font-weight:bold; margin-top:8px;">1-сандық: Алтын тәж</div>
+      </div>
+
+      <div class="sandıq-box" onclick="openSandiq(2)">
+        <svg width="70" height="50" viewBox="0 0 120 80">
+          <rect x="10" y="25" width="100" height="50" rx="6" fill="#854d0e"/>
+          <path d="M 10 25 Q 60 5 110 25 Z" fill="#a16207"/>
+          <circle cx="60" cy="45" r="7" fill="#facc15"/>
+          <line x1="10" y1="25" x2="110" y2="25" stroke="#facc15" stroke-width="3"/>
+        </svg>
+        <div style="font-weight:bold; margin-top:8px;">2-сандық: Күміс тостаған</div>
+      </div>
+
+      <div class="sandıq-box" onclick="openSandiq(3)">
+        <svg width="70" height="50" viewBox="0 0 120 80">
+          <rect x="10" y="25" width="100" height="50" rx="6" fill="#854d0e"/>
+          <path d="M 10 25 Q 60 5 110 25 Z" fill="#a16207"/>
+          <circle cx="60" cy="45" r="7" fill="#facc15"/>
+          <line x1="10" y1="25" x2="110" y2="25" stroke="#facc15" stroke-width="3"/>
+        </svg>
+        <div style="font-weight:bold; margin-top:8px;">3-сандық: Ақинак қылышы</div>
+      </div>
+    </div>
+
+    <div class="asyq-modal" id="sandiq-modal" style="display:block;">
+      <h3 id="sandiq-title" style="margin-top:0; color:#0b1e36;">Сандықты таңдаңыз</h3>
+      <p id="sandiq-desc" style="font-size:15px; color:#444;">Жоғарыдағы көне сандықтардың бірін ашып, жәдігердің тарихи сырын оқыңыз.</p>
+    </div>
+  </div>
+
+  <!-- 3-ТАПСЫРМА: БОТАЙ МӘДЕНИЕТІ ЖӘНЕ ТҰЛПАР -->
+  <div class="tab-content" id="tab-2">
+    <div class="task-title">«Ботай мәдениеті: Жылқыны алғаш қолға үйретушілер»</div>
+    <p class="desc">Қазақ даласының әлемдік өркениетке қосқан ең ірі жаңалығы туралы сауалдарға жауап беріңіз.</p>
+    <div id="quiz-botai"></div>
+    <div class="result-banner" id="botai-result" style="display:none;">Жарайсың! Ботай мәдениетінің әлемдік маңызын терең ұғындыңыз!</div>
+    <div class="btn-container">
+      <button class="action-btn" onclick="initBotaiQuiz()">Қайта бастау</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(index) {
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === index));
+    document.querySelectorAll('.tab-content').forEach((content, i) => content.classList.toggle('active', i === index));
+  }
+
+  /* ================= 1-ТАПСЫРМА: АСЫҚ ОЙЫНЫ ДЕРЕКТЕРІ ================= */
+  const asyqQuestions = {
+    1: {
+      title: "АЛШЫ: Сақ жауынгері Шырақтың ерлігі",
+      q: "Сақ бақташысы Шырақ парсы патшасы Дарийдің қалың әскерін шөл далаға алдап апарып, өз өмірін құрбан етті. Шырақтың бұл ісі қандай биік ұлттық құндылықты көрсетеді?",
+      opts: [
+        "Отанға шексіз адалдық пен ерлікті",
+        "Тек байлық пен мал-мүлікті қорғауды",
+        "Басқа елдерге саяхаттау құштарлығын",
+        "Шөл далада жол табу шеберлігін"
+      ],
+      ans: 0
+    },
+    2: {
+      title: "ТӘЙКЕ: Томирис патшайымның сөзі",
+      q: "Томирис патшайым елге басып кірген Кир патшаға қарсы шығып: «Елімнің еркіндігі үшін қасық қаным қалғанша шайқасамын!» деді. Бұл сақтарда қандай дәстүрдің жоғары болғанын білдіреді?",
+      opts: [
+        "Ананы қастерлеу және тәуелсіздікті бәрінен биік қою",
+        "Басқа елдерге соғыс ашу құштарлығы",
+        "Тек қала салу өнері",
+        "Шетелмен сауда жасау салты"
+      ],
+      ans: 0
+    },
+    3: {
+      title: "БҮК: «Аң стилі» өнері",
+      q: "Сақтар өз бұйымдарына барыс, бүркіт, арқар бейнелерін салған. Бабаларымыз неліктен жануарларды бейнеледі?",
+      opts: [
+        "Табиғатпен етене үндесіп, аңдардың ептілігі мен күш-қуатын қастерлегендіктен",
+        "Тек металдың жетіспеушілігінен",
+        "Сурет салу құралдары болмағандықтан",
+        "Жазуды мүлде білмегендіктен"
+      ],
+      ans: 0
+    },
+    4: {
+      title: "ШІК: Көшпелілердің баспанасы",
+      q: "Көшпелілердің киіз үйі күн сәулесіне қарап орналасқан, жинауға өте қолайлы болды. Киіз үй көшпелілердің қандай қасиетін айғақтайды?",
+      opts: [
+        "Табиғатпен үйлесімді өмір сүру даналығы мен шеберлігін",
+        "Тек қала салмау әдетін",
+        "Тек қыста ғана өмір сүру қағидасын",
+        "Бөгде елдерден қорқу сезімін"
+      ],
+      ans: 0
+    }
+  };
+
+  function openAsyq(id) {
+    const data = asyqQuestions[id];
+    const modal = document.getElementById("asyq-modal");
+    modal.style.display = "block";
+    document.getElementById("asyq-q-title").innerText = data.title;
+    document.getElementById("asyq-question").innerText = data.q;
+    
+    const optBox = document.getElementById("asyq-options");
+    optBox.innerHTML = "";
+
+    data.opts.forEach((opt, idx) => {
+      const b = document.createElement("button");
+      b.className = "opt-btn";
+      b.innerText = opt;
+      b.onclick = () => {
+        const all = optBox.querySelectorAll(".opt-btn");
+        all.forEach(x => x.disabled = true);
+        if(idx === data.ans) {
+          b.classList.add("correct");
+          document.getElementById(`card-${id}`).classList.add("opened");
+        } else {
+          b.classList.add("wrong");
+          all[data.ans].classList.add("correct");
+        }
+      };
+      optBox.appendChild(b);
+    });
+  }
+
+  /* ================= 2-ТАПСЫРМА: САНДЫҚТАР ДЕРЕГІ ================= */
+  const sandiqData = {
+    1: {
+      title: "👑 1-сандық: Алтын тәж (4 жебе мен пырақ)",
+      desc: "Есік обасынан табылған бас киімдегі 4 алтын жебе — әлемнің 4 бұрышына билік ету нышаны. Ал қанатты тұлпарлар — Күнге табыну мен еркіндік сүйгіш бабалар рухын білдіреді."
+    },
+    2: {
+      title: "🥣 2-сандық: 26 таңбалы күміс тостаған",
+      desc: "Бұл тостаған сақтарда осыдан 2500 жыл бұрын төл жазу мәдениетінің болғанын айғақты ғылыми дәлелдейді! Бұл біздің бабаларымыздың жоғары өркениет иесі болғанын көрсетеді."
+    },
+    3: {
+      title: "🗡️ 3-сандық: Алтынмен апталған ақинак",
+      desc: "Сақ жауынгерінің қаруы тек қорғаныс құралы емес, ерлік пен ел тыныштығының, ар-намыстың киелі белгісі саналған."
+    }
+  };
+
+  function openSandiq(num) {
+    document.querySelectorAll('.sandıq-box').forEach((box, i) => box.classList.toggle('active', i === num-1));
+    document.getElementById("sandiq-title").innerText = sandiqData[num].title;
+    document.getElementById("sandiq-desc").innerText = sandiqData[num].desc;
+  }
+
+  /* ================= 3-ТАПСЫРМА: БОТАЙ ВИКТОРИНАСЫ ================= */
+  const botaiQuestions = [
+    {
+      q: "Неліктен ботайлықтарды бүкіл әлем ғалымдары «Жылқыны алғаш қолға үйретушілер» деп мойындады?",
+      options: [
+        "Қоныстан жылқы сүйектері, қымыз қалдықтары мен ауыздық іздері табылғандықтан",
+        "Олар жылқы туралы кітап жазғандықтан",
+        "Тек аңшылықпен айналысқандықтан",
+        "Жылқыны басқа елдерден сатып алғандықтан"
+      ],
+      correct: 0
+    },
+    {
+      q: "Ботайлықтардың жылқыны мінуі мен шаруашылыққа енгізуі адамзат тарихына қандай үлкен төңкеріс әкелді?",
+      options: [
+        "Арақашықтықты жақындатып, Ұлы Далада жылдам қозғалу мен көшпелі өркениеттің басталуына жол ашты",
+        "Адамдардың қалалардан көшіп кетуіне мәжбүр етті",
+        "Егін егуді мүлде тоқтатты",
+        "Басқа көлік түрлерінің жойылуына әсер етті"
+      ],
+      correct: 0
+    }
+  ];
+
+  let botaiCorrect = 0;
+  function initBotaiQuiz() {
+    const box = document.getElementById("quiz-botai");
+    box.innerHTML = "";
+    document.getElementById("botai-result").style.display = "none";
+    botaiCorrect = 0;
+
+    botaiQuestions.forEach((item, qIdx) => {
+      const qDiv = document.createElement("div");
+      qDiv.style.background = "#f8fafc";
+      qDiv.style.padding = "15px";
+      qDiv.style.borderRadius = "10px";
+      qDiv.style.marginBottom = "15px";
+      qDiv.style.border = "1px solid #e2e8f0";
+      qDiv.innerHTML = `<div style="font-weight:bold; margin-bottom:10px;">${qIdx + 1}. ${item.q}</div>`;
+      
+      const optDiv = document.createElement("div");
+      optDiv.className = "quiz-options";
+
+      item.options.forEach((opt, optIdx) => {
+        const btn = document.createElement("button");
+        btn.className = "opt-btn";
+        btn.innerText = opt;
+        btn.onclick = () => {
+          optDiv.querySelectorAll(".opt-btn").forEach(b => b.disabled = true);
+          if (optIdx === item.correct) {
+            btn.classList.add("correct");
+            botaiCorrect++;
+            if (botaiCorrect === botaiQuestions.length) {
+              document.getElementById("botai-result").style.display = "block";
+            }
+          } else {
+            btn.classList.add("wrong");
+            optDiv.querySelectorAll(".opt-btn")[item.correct].classList.add("correct");
+          }
+        };
+        optDiv.appendChild(btn);
+      });
+      qDiv.appendChild(optDiv);
+      box.appendChild(qDiv);
+    });
+  }
+
+  // Бастапқы қосу
+  initBotaiQuiz();
+</script>
+
+</body>
+</html>

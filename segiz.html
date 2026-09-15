@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <title>8-9 сыныптар: Алаш аманаты және Тәуелсіздік рухы</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0b1a2f, #1e293b);
+      color: #333;
+      margin: 0;
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    .header-box {
+      text-align: center;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+    .header-box h1 {
+      margin: 0 0 6px 0;
+      font-size: 24px;
+      color: #f5b041;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .header-box p {
+      margin: 0;
+      font-size: 15px;
+      opacity: 0.9;
+    }
+    .container {
+      background: #ffffff;
+      max-width: 950px;
+      width: 100%;
+      border-radius: 18px;
+      padding: 25px 30px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.35);
+      box-sizing: border-box;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #0b1e36;
+      padding: 9px 14px;
+      font-size: 13.5px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover {
+      background: #e2e8f0;
+    }
+    .tab-btn.active {
+      background: #0b1e36;
+      color: #f5b041;
+      border-color: #0b1e36;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .task-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #0b1e36;
+      margin-bottom: 6px;
+    }
+    .desc {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    /* 1-тапсырма: Сәйкестендіру стилі */
+    .game-board {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+    }
+    .column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .card {
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      font-size: 13.5px;
+      transition: 0.2s;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      user-select: none;
+    }
+    .card:hover {
+      border-color: #f5b041;
+      background: #fffdf5;
+    }
+    .card.selected {
+      border-color: #f5b041;
+      background: #fef5d1;
+      font-weight: bold;
+    }
+    .card.matched {
+      background: #e8f5e9;
+      border-color: #4caf50;
+      color: #2e7d32;
+      pointer-events: none;
+    }
+
+    /* Викторина стильдері */
+    .quiz-card {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .quiz-question {
+      font-size: 15px;
+      font-weight: bold;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .opt-btn {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      padding: 10px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: left;
+      font-size: 13.5px;
+      transition: 0.2s;
+    }
+    .opt-btn:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+    .opt-btn.correct {
+      background: #dcfce7 !important;
+      border-color: #22c55e !important;
+      color: #15803d !important;
+      font-weight: bold;
+    }
+    .opt-btn.wrong {
+      background: #fee2e2 !important;
+      border-color: #ef4444 !important;
+      color: #b91c1c !important;
+    }
+
+    /* Хронология тізбегі */
+    .timeline-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .timeline-item {
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      padding: 12px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: 0.2s;
+    }
+    .timeline-item:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+    .timeline-item.chosen {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #15803d;
+      font-weight: bold;
+      pointer-events: none;
+    }
+
+    /* Ортақ батырмалар */
+    .result-banner {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      color: #2e7d32;
+      display: none;
+    }
+    .action-btn {
+      background: #f5b041;
+      color: #0b1e36;
+      border: none;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .action-btn:hover {
+      background: #d49f2b;
+    }
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header-box">
+  <h1>Қазақстан тарихы: 8-9 сыныптар</h1>
+  <p>«Алаш аманаты және Тәуелсіздік шежіресі» интерактивті кешені</p>
+</div>
+
+<div class="container">
+  <!-- Вкладкалар -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(0)">1. Алаш ұрандары (8-сынып)</button>
+    <button class="tab-btn" onclick="switchTab(1)">2. 1916 ж. Көтеріліс (8-сынып)</button>
+    <button class="tab-btn" onclick="switchTab(2)">3. Ұлт ұстазы (8-сынып)</button>
+    <button class="tab-btn" onclick="switchTab(3)">4. 1986 ж. Желтоқсан (9-сынып)</button>
+    <button class="tab-btn" onclick="switchTab(4)">5. Тәуелсіздік шежіресі (9-сынып)</button>
+  </div>
+
+  <!-- 1-ТАПСЫРМА (8-сынып): Алаш ұрандары -->
+  <div class="tab-content active" id="tab-0">
+    <div class="task-title">«Алаш аманаты: Ұлт зиялыларының қасиетті сөздері»</div>
+    <p class="desc">Сол жақтағы Алаш қайраткерінің атын таңдап, оң жақтағы оған сай келетін ұлағатты ұранын табыңыз.</p>
+    <div class="game-board">
+      <div class="column" id="alash-leaders"></div>
+      <div class="column" id="alash-quotes"></div>
+    </div>
+    <div class="result-banner" id="res-1">Тамаша! Алаш көсемдерінің ұлттық мұратын дәл сәйкестендірдіңіз!</div>
+    <div class="btn-container">
+      <button class="action-btn" onclick="initAlashMatch()">Қайта бастау</button>
+    </div>
+  </div>
+
+  <!-- 2-ТАПСЫРМА (8-сынып): 1916 жылғы көтеріліс -->
+  <div class="tab-content" id="tab-1">
+    <div class="task-title">«1916 жыл: Азаттық пен ұлттық намыс көтерілісі»</div>
+    <p class="desc">Қазақ халқының бостандық үшін күресі мен батырлар ерлігіне қатысты сауалдарға жауап беріңіз.</p>
+    <div id="quiz-1916"></div>
+    <div class="result-banner" id="res-2">Жарайсың! 1916 жылғы көтерілістің тарихи маңызын терең түсінесіз!</div>
+    <div class="btn-container">
+      <button class="action-btn" onclick="init1916Quiz()">Қайта бастау</button>
+    </div>
+  </div>
+
+  <!-- 3-ТАПСЫРМА (8-сынып): Ахмет Байтұрсынов -->
+  <div class="tab-content" id="tab-2">
+    <div class="task-title">«Ахмет Байтұрсынов – Ұлт ұстазы және Тіл жанашыры»</div>
+    <p class="desc">Ана тілі мен ұлттық білімнің негізін салған ғалымның мұрасы бойынша тапсырма:</p>
+    <div id="quiz-akhmet"></div>
+    <div class="result-banner" id="res-3">Керемет! Ұлт ұстазының қасиетті еңбегін терең меңгергенсіз!</div>
+    <div class="btn-container">
+      <button class="action-btn" onclick="initAkhmetQuiz()">Қайта бастау</button>
+    </div>
+  </div>
+
+  <!-- 4-ТАПСЫРМА (9-сынып): 1986 жылғы Желтоқсан -->
+  <div class="tab-content" id="tab-3">
+    <div class="task-title">«1986 жылғы Желтоқсан: Ұлттық сананың сілкінісі»</div>
+    <p class="desc">Қазақ жастарының бейбіт шеруі мен Тәуелсіздікке жол ашқан қаһармандық рухын бағалаңыз.</p>
+    <div id="quiz-december"></div>
+    <div class="result-banner" id="res-4">Тамаша! Желтоқсан оқиғасының тарихи маңыздылығын өте дұрыс бағаладыңыз!</div>
+    <div class="btn-container">
+      <button class="action-btn" onclick="initDecemberQuiz()">Қайта бастау</button>
+    </div>
+  </div>
+
+  <!-- 5-ТАПСЫРМА (9-сынып): Тәуелсіздік қадамдары -->
+  <div class="tab-content" id="tab-4">
+    <div class="task-title">«Тәуелсіздік шежіресі: Мемлекеттілік пен Егемендік белестері»</div>
+    <p class="desc">Қазақстанның тәуелсіздік жолындағы тарихи оқиғаларын уақыт ретімен (ең ерте оқиғадан бастап) басып шығыңыз:</p>
+    <div class="timeline-container" id="timeline-box"></div>
+    <div class="result-banner" id="res-5">Жарайсың! Тәуелсіз Қазақстанның қалыптасу шежіресі толық әрі қатесіз құрылды!</div>
+    <div class="btn-container">
+      <button class="action-btn" onclick="initTimeline()">Қайта бастау</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(index) {
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === index));
+    document.querySelectorAll('.tab-content').forEach((content, i) => content.classList.toggle('active', i === index));
+  }
+
+  function shuffle(arr) { return arr.slice().sort(() => Math.random() - 0.5); }
+
+  /* ================= 1-МОДУЛЬ: АЛАШ КӨСЕМДЕРІ МЕН ҰРАНДАРЫ ================= */
+  const alashData = [
+    { id: 1, leader: "Әлихан Бөкейхан", quote: "«Тірі болсам, қазаққа қызмет қылмай қоймаймын» (Ұлттық мемлекет идеясы)" },
+    { id: 2, leader: "Ахмет Байтұрсынов", quote: "«Тілі жоғалған ұлттың өзі де жоғалады» (Ана тілі мен оқу-ағарту құндылығы)" },
+    { id: 3, leader: "Міржақып Дулатұлы", quote: "«Көзіңді аш, оян, қазақ, көтер басты!» (Қалың елді ояту мен саяси сана)" },
+    { id: 4, leader: "Мағжан Жұмабаев", quote: "«Арыстандай айбатты, Мен жастарға сенемін!» (Ұрпаққа сенім мен рух беру)" }
+  ];
+
+  let selLeader = null, selQuote = null, alashMatchCount = 0;
+
+  function initAlashMatch() {
+    const lCol = document.getElementById("alash-leaders");
+    const qCol = document.getElementById("alash-quotes");
+    lCol.innerHTML = ""; qCol.innerHTML = "";
+    document.getElementById("res-1").style.display = "none";
+    alashMatchCount = 0; selLeader = null; selQuote = null;
+
+    shuffle(alashData).forEach(item => {
+      const c = document.createElement("div");
+      c.className = "card"; c.innerText = item.leader; c.dataset.id = item.id;
+      c.onclick = () => {
+        if(c.classList.contains("matched")) return;
+        document.querySelectorAll("#alash-leaders .card").forEach(x => x.classList.remove("selected"));
+        c.classList.add("selected"); selLeader = c; checkAlashMatch();
+      };
+      lCol.appendChild(c);
+    });
+
+    shuffle(alashData).forEach(item => {
+      const c = document.createElement("div");
+      c.className = "card"; c.innerText = item.quote; c.dataset.id = item.id;
+      c.onclick = () => {
+        if(c.classList.contains("matched")) return;
+        document.querySelectorAll("#alash-quotes .card").forEach(x => x.classList.remove("selected"));
+        c.classList.add("selected"); selQuote = c; checkAlashMatch();
+      };
+      qCol.appendChild(c);
+    });
+  }
+
+  function checkAlashMatch() {
+    if (selLeader && selQuote) {
+      if (selLeader.dataset.id === selQuote.dataset.id) {
+        selLeader.className = "card matched";
+        selQuote.className = "card matched";
+        alashMatchCount++; selLeader = null; selQuote = null;
+        if (alashMatchCount === alashData.length) document.getElementById("res-1").style.display = "block";
+      } else {
+        setTimeout(() => {
+          if(selLeader) selLeader.classList.remove("selected");
+          if(selQuote) selQuote.classList.remove("selected");
+          selLeader = null; selQuote = null;
+        }, 350);
+      }
+    }
+  }
+
+  /* ================= 2-МОДУЛЬ: 1916 ЖЫЛҒЫ КӨТЕРІЛІС ================= */
+  const quiz1916Questions = [
+    {
+      q: "1916 жылғы ұлт-азаттық көтерілістің бүкілхалықтық сипат алуының басты себебі неде?",
+      options: [
+        "Патша өкіметінің отарлық езгісіне және қара жұмысқа адам алу жарлығына халықтың ашық наразылығы",
+        "Тек қала салуға қарсылық",
+        "Шетелдік өнеркәсіптердің көбеюі",
+        "Ауыл шаруашылығы жәрмеңкелерінің өткізілуі"
+      ],
+      correct: 0
+    },
+    {
+      q: "Торғай көтерілісі ошағында халықты ұйымдастырып, мыңбасылық басқару тәртібін енгізген халық батыры кім?",
+      options: [
+        "Амангелді Иманов",
+        "Бекболат Әшекеев",
+        "Тоқаш Бокин",
+        "Ұзақ Саурықов"
+      ],
+      correct: 0
+    }
+  ];
+
+  let c1916 = 0;
+  function init1916Quiz() {
+    buildGenericQuiz("quiz-1916", quiz1916Questions, "res-2");
+  }
+
+  /* ================= 3-МОДУЛЬ: АХМЕТ БАЙТҰРСЫНОВ МҰРАСЫ ================= */
+  const akhmetQuestions = [
+    {
+      q: "Ахмет Байтұрсыновтың қазақ жазуына жасаған ең үлкен жаңалығы қандай?",
+      options: [
+        "Араб графикасына негізделген қазақтың төл дыбыстық жүйесін жасап, «Төте жазуды» (Әліпбиді) дүниеге әкелді",
+        "Латын әліпбиін толық жойды",
+        "Орыс тілі грамматикасын жазды",
+        "Тек аударма ісімен шектелді"
+      ],
+      correct: 0
+    },
+    {
+      q: "А. Байтұрсыновтың «Маса» жинағының басты идеялық мәні мен құндылығы неде?",
+      options: [
+        "Ұйқыда жатқан қалың қазақты білім мен өнерге оятып, еңбекке үндеу",
+        "Тек табиғат көріністерін суреттеу",
+        "Көрші мемлекеттерге сапар шегу",
+        "Ежелгі батырларды сынау"
+      ],
+      correct: 0
+    }
+  ];
+
+  function initAkhmetQuiz() {
+    buildGenericQuiz("quiz-akhmet", akhmetQuestions, "res-3");
+  }
+
+  /* ================= 4-МОДУЛЬ: 1986 ЖЫЛҒЫ ЖЕЛТОҚСАН ================= */
+  const decQuestions = [
+    {
+      q: "1986 жылғы Желтоқсан оқиғасына қазақ жастарының алаңға шығуының басты рухани түрткісі не болды?",
+      options: [
+        "Ұлттық намыс пен егемендік құқығының аяққа тапталуына және әміршіл жүйенің озбырлығына қарсылық",
+        "Тек жалақының аздығы",
+        "Оқу орындарының жабылуы",
+        "Басқа республикаларға көшу туралы талап"
+      ],
+      correct: 0
+    },
+    {
+      q: "Желтоқсан қаһарманы Қайрат Рысқұлбековтің «Қайрат деген атым бар, қазақ деген затым бар...» деген сөздері қандай қасиетті паш етеді?",
+      options: [
+        "Өршіл патриотизмді, туған халқы үшін жан қияр қайсарлық пен асқақ намысты",
+        "Тек өзін қорғауға тырысуды",
+        "Сот жүйесіне сенімсіздікті",
+        "Жастардың қалаға келуін шектеуді"
+      ],
+      correct: 0
+    }
+  ];
+
+  function initDecemberQuiz() {
+    buildGenericQuiz("quiz-december", decQuestions, "res-4");
+  }
+
+  /* Ортақ викторина құрастырушы */
+  function buildGenericQuiz(containerId, dataArray, resultId) {
+    const box = document.getElementById(containerId);
+    box.innerHTML = "";
+    document.getElementById(resultId).style.display = "none";
+    let correctCount = 0;
+
+    dataArray.forEach((item, qIdx) => {
+      const qDiv = document.createElement("div");
+      qDiv.className = "quiz-card";
+      qDiv.innerHTML = `<div class="quiz-question">${qIdx + 1}. ${item.q}</div>`;
+
+      const optDiv = document.createElement("div");
+      optDiv.className = "quiz-options";
+
+      item.options.forEach((opt, optIdx) => {
+        const btn = document.createElement("button");
+        btn.className = "opt-btn";
+        btn.innerText = opt;
+        btn.onclick = () => {
+          optDiv.querySelectorAll(".opt-btn").forEach(b => b.disabled = true);
+          if (optIdx === item.correct) {
+            btn.classList.add("correct");
+            correctCount++;
+            if (correctCount === dataArray.length) {
+              document.getElementById(resultId).style.display = "block";
+            }
+          } else {
+            btn.classList.add("wrong");
+            optDiv.querySelectorAll(".opt-btn")[item.correct].classList.add("correct");
+          }
+        };
+        optDiv.appendChild(btn);
+      });
+      qDiv.appendChild(optDiv);
+      box.appendChild(qDiv);
+    });
+  }
+
+  /* ================= 5-МОДУЛЬ: ТӘУЕЛСІЗДІК ХРОНОЛОГИЯСЫ ================= */
+  const timelineEvents = [
+    { step: 1, text: "1990 жыл 25 қазан — Қазақ КСР-інің Мемлекеттік егемендігі туралы Декларация" },
+    { step: 2, text: "1991 жыл 16 желтоқсан — Қазақстан Республикасының Мемлекеттік Тәуелсіздігі жарияланды" },
+    { step: 3, text: "1992 жыл 4 маусым — Мемлекеттік рәміздер бекітілді (Ту, Елтаңба, Әнұран)" },
+    { step: 4, text: "1993 жыл 15 қараша — Ұлттық валютамыз – Теңге айналымға енгізілді" },
+    { step: 5, text: "1995 жыл 30 тамыз — Қазақстан Республикасының қолданыстағы Конституциясы қабылданды" }
+  ];
+
+  let currentTimelineStep = 1;
+
+  function initTimeline() {
+    const box = document.getElementById("timeline-box");
+    box.innerHTML = "";
+    document.getElementById("res-5").style.display = "none";
+    currentTimelineStep = 1;
+
+    shuffle(timelineEvents).forEach(item => {
+      const el = document.createElement("div");
+      el.className = "timeline-item";
+      el.innerText = item.text;
+      el.onclick = () => {
+        if (item.step === currentTimelineStep) {
+          el.classList.add("chosen");
+          currentTimelineStep++;
+          if (currentTimelineStep > timelineEvents.length) {
+            document.getElementById("res-5").style.display = "block";
+          }
+        } else {
+          el.style.borderColor = "#ef4444";
+          setTimeout(() => el.style.borderColor = "#cbd5e1", 450);
+        }
+      };
+      box.appendChild(el);
+    });
+  }
+
+  // Бастапқы қосу
+  initAlashMatch();
+  init1916Quiz();
+  initAkhmetQuiz();
+  initDecemberQuiz();
+  initTimeline();
+</script>
+
+</body>
+</html>

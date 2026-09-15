@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <title>7-сынып: Батырлар рухы және Ел бірлігі</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1c29, #0f2b48);
+      color: #333;
+      margin: 0;
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    .header-box {
+      text-align: center;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+    .header-box h1 {
+      margin: 0 0 6px 0;
+      font-size: 24px;
+      color: #f5b041;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .header-box p {
+      margin: 0;
+      font-size: 15px;
+      opacity: 0.9;
+    }
+    .container {
+      background: #ffffff;
+      max-width: 900px;
+      width: 100%;
+      border-radius: 18px;
+      padding: 25px 30px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.35);
+      box-sizing: border-box;
+    }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 12px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      color: #0b1e36;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover {
+      background: #e2e8f0;
+    }
+    .tab-btn.active {
+      background: #0b1e36;
+      color: #f5b041;
+      border-color: #0b1e36;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .task-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #0b1e36;
+      margin-bottom: 6px;
+    }
+    .desc {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* 1-ТАПСЫРМА: Қалқандар көрнекілігі */
+    .shield-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+    .shield-card {
+      background: #fdfbf7;
+      border: 2px solid #e5b242;
+      border-radius: 14px;
+      padding: 16px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .shield-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(229, 178, 66, 0.25);
+      border-color: #b37c1b;
+    }
+    .shield-card.active {
+      background: #fef5d1;
+      border-color: #0b1e36;
+    }
+    .shield-name {
+      font-weight: bold;
+      margin-top: 10px;
+      color: #0b1e36;
+      font-size: 15px;
+    }
+
+    .info-modal {
+      background: #f8fafc;
+      border: 2px solid #f5b041;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 15px;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Викторина және таңдау батырмалары */
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .opt-btn {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      padding: 12px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: left;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+    .opt-btn:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+    .opt-btn.correct {
+      background: #dcfce7 !important;
+      border-color: #22c55e !important;
+      color: #15803d !important;
+      font-weight: bold;
+    }
+    .opt-btn.wrong {
+      background: #fee2e2 !important;
+      border-color: #ef4444 !important;
+      color: #b91c1c !important;
+    }
+
+    .result-banner {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      color: #2e7d32;
+    }
+    .action-btn {
+      background: #f5b041;
+      color: #0b1e36;
+      border: none;
+      padding: 10px 24px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .action-btn:hover {
+      background: #d49f2b;
+    }
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header-box">
+  <h1>Қазақстан тарихы: 7-сынып</h1>
+  <p>«Батырлар рухы, шешендік өнер және ел тұтастығы» кешені</p>
+</div>
+
+<div class="container">
+  <!-- Вкладкалар -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(0)">1-модуль: Үш би мен Ордабасы бірлігі</button>
+    <button class="tab-btn" onclick="switchTab(1)">2-модуль: Аңырақай және Батырлар ерлігі</button>
+    <button class="tab-btn" onclick="switchTab(2)">3-модуль: «Елім-ай» және Рухани мұра</button>
+  </div>
+
+  <!-- 1-МОДУЛЬ: ҚАСИЕТТІ ҚАЛҚАНДАР СЫРЫ -->
+  <div class="tab-content active" id="tab-0">
+    <div class="task-title">«Ордабасы сыры: Қасиетті үш қалқан мен ел бірлігі»</div>
+    <p class="desc">Үш жүздің данагөй билерінің қалқанын басып, халықты біріктірген ұлағатты сөздері мен шешімдерін зерттеңіз.</p>
+
+    <div class="shield-grid">
+      <!-- 1: Төле би -->
+      <div class="shield-card" id="sh-1" onclick="openShield(1)">
+        <svg width="70" height="70" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="42" fill="#a16207" stroke="#facc15" stroke-width="4"/>
+          <circle cx="50" cy="50" r="28" fill="none" stroke="#fef08a" stroke-width="2" stroke-dasharray="4 2"/>
+          <path d="M 50 20 L 50 80 M 20 50 L 80 50" stroke="#facc15" stroke-width="3"/>
+        </svg>
+        <div class="shield-name">Ұлы жүз: Төле би</div>
+      </div>
+
+      <!-- 2: Қазыбек би -->
+      <div class="shield-card" id="sh-2" onclick="openShield(2)">
+        <svg width="70" height="70" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="42" fill="#1e3a8a" stroke="#60a5fa" stroke-width="4"/>
+          <circle cx="50" cy="50" r="28" fill="none" stroke="#bfdbfe" stroke-width="2" stroke-dasharray="4 2"/>
+          <polygon points="50,22 60,42 82,42 64,56 71,76 50,62 29,76 36,56 18,42 40,42" fill="#60a5fa"/>
+        </svg>
+        <div class="shield-name">Орта жүз: Қазыбек би</div>
+      </div>
+
+      <!-- 3: Әйтеке би -->
+      <div class="shield-card" id="sh-3" onclick="openShield(3)">
+        <svg width="70" height="70" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="42" fill="#14532d" stroke="#4ade80" stroke-width="4"/>
+          <circle cx="50" cy="50" r="28" fill="none" stroke="#bbf7d0" stroke-width="2" stroke-dasharray="4 2"/>
+          <circle cx="50" cy="50" r="14" fill="#4ade80"/>
+        </svg>
+        <div class="shield-name">Кіші жүз: Әйтеке би</div>
+      </div>
+    </div>
+
+    <div class="info-modal" id="shield-info">
+      <h3 id="shield-title" style="margin-top:0; color:#0b1e36;">Қалқанды таңдаңыз</h3>
+      <p id="shield-text" style="font-size:15px; color:#444;">Жоғарыдағы қалқандардың бірін шертсеңіз, Ордабасы құрылтайындағы бидің ұстанымы мен құндылығы шығады.</p>
+    </div>
+  </div>
+
+  <!-- 2-МОДУЛЬ: АҢЫРАҚАЙ ШАЙҚАСЫ ЖӘНЕ БАТЫРЛАР -->
+  <div class="tab-content" id="tab-1">
+    <div class="task-title">«Аңырақай шайқасы: Халық жасағының жеңісі»</div>
+    <p class="desc">1729-1730 жылдардағы ұлы бетбұрыс шайқас пен батырлар ерлігіне қатысты сауалдарға жауап беріңіз.</p>
+    <div id="quiz-batyr"></div>
+    <div class="result-banner" id="res-batyr" style="display:none;">Жарайсың! Аңырақай жеңісі мен батырлар ерлігін терең меңгердіңіз!</div>
+    <div class="btn-container">
+      <button class="action-btn" onclick="initBatyrQuiz()">Қайта бастау</button>
+    </div>
+  </div>
+
+  <!-- 3-МОДУЛЬ: «ЕЛІМ-АЙ» ЖӘНЕ ДӘСТҮРЛІ ӨНЕР -->
+  <div class="tab-content" id="tab-2">
+    <div class="task-title">«Елім-ай» әні: Халықтың рухы мен тарихи жады»</div>
+    <p class="desc">«Ақтабан шұбырынды, Алқакөл сауған» заманы және қазақ руханиятына қатысты тарихи сауалдарды шешіңіз.</p>
+    <div id="quiz-elimai"></div>
+    <div class="result-banner" id="res-elimai" style="display:none;">Керемет! Ұлттық қасірет пен ерлік шежіресін жақсы білесіз!</div>
+    <div class="btn-container">
+      <button class="action-btn" onclick="initElimaiQuiz()">Қайта бастау</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(index) {
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === index));
+    document.querySelectorAll('.tab-content').forEach((content, i) => content.classList.toggle('active', i === index));
+  }
+
+  /* ================= 1-МОДУЛЬ: ҚАЛҚАНДАР ДЕРЕКТЕРІ ================= */
+  const shieldData = {
+    1: {
+      title: "🛡️ Төле би Әлібекұлы (Ұлы жүз): Бірлік пен ынтымақ ұраны",
+      text: "«Жүздікке бөлінгеннің жүзі қара, бірлік болмай — тірлік болмас!» деп үш жүздің басын қосуды ұсынды. Ордабасы құрылтайында барлық қазақ жасағын ортақ мақсатқа жұмылдырудың басты рухани ұйтқысы болды."
+    },
+    2: {
+      title: "🛡️ Қазыбек би Келдібекұлы (Орта жүз): Намыс пен шешендік нышаны",
+      text: "«Біз қазақ деген мал баққан елміз, ешкімге соқтықпай жай жатқан елміз. Басымыздан сөзді асырмаған, намысын бермеген елміз!» деп жоңғарларға сес көрсетіп, ел намысын қорғаған шешен әрі қайраткер."
+    },
+    3: {
+      title: "🛡️ Әйтеке би Байбекұлы (Кіші жүз): Әділдік пен батылдық кепілі",
+      text: "«Өмірім — халықтыкі, өлімім ғана — өзімдікі» деп мемлекет мүддесін жеке бас пайдасынан биік қойған дара тұлға. Ордабасыда біртұтас бас қолбасшыны сайлау қажеттігін дәлелдеп берді."
+    }
+  };
+
+  function openShield(id) {
+    document.querySelectorAll('.shield-card').forEach((c, i) => c.classList.toggle('active', i === id - 1));
+    document.getElementById("shield-title").innerText = shieldData[id].title;
+    document.getElementById("shield-text").innerText = shieldData[id].text;
+  }
+
+  /* ================= 2-МОДУЛЬ: АҢЫРАҚАЙ ЖӘНЕ БАТЫРЛАР ВИКТОРИНАСЫ ================= */
+  const batyrQuestions = [
+    {
+      q: "1726 жылғы Ордабасы құрылтайында қазақ жасақтарының бас қолбасшысы болып кім сайланды?",
+      options: [
+        "Әбілқайыр хан",
+        "Абылай хан",
+        "Бөгенбай батыр",
+        "Қабанбай батыр"
+      ],
+      correct: 0
+    },
+    {
+      q: "Аңырақай шайқасының қазақ халқы үшін ең басты тарихи мәні мен құндылығы неде болды?",
+      options: [
+        "Қазақ жүздерінің ауызбіршілігінің арқасында басқыншыларға күйрете соққы беріліп, ел азат етілді",
+        "Көрші елдермен сауда қатынасы дамыды",
+        "Жаңа астана құрылды",
+        "Тек орыс әскерінің көмегімен жеңіске жетті"
+      ],
+      correct: 0
+    },
+    {
+      q: "«Қанжығалы Бөгенбай», «Дарабоз Қабанбай», «Шапырашты Наурызбай» сынды халық батырлары ненің символы болды?",
+      options: [
+        "Отанды қорғау, шексіз ерлік және қаһармандық рухтың",
+        "Тек ру мүддесін қорғаудың",
+        "Жылқы бағу кәсібінің",
+        "Қала басқару ісінің"
+      ],
+      correct: 0
+    }
+  ];
+
+  let batyrCorrect = 0;
+  function initBatyrQuiz() {
+    const box = document.getElementById("quiz-batyr");
+    box.innerHTML = "";
+    document.getElementById("res-batyr").style.display = "none";
+    batyrCorrect = 0;
+
+    batyrQuestions.forEach((item, qIdx) => {
+      const qDiv = document.createElement("div");
+      qDiv.style.background = "#f8fafc";
+      qDiv.style.padding = "16px";
+      qDiv.style.borderRadius = "10px";
+      qDiv.style.marginBottom = "15px";
+      qDiv.style.border = "1.5px solid #e2e8f0";
+      qDiv.innerHTML = `<div style="font-weight:bold; font-size:15px; margin-bottom:12px;">${qIdx + 1}. ${item.q}</div>`;
+
+      const optDiv = document.createElement("div");
+      optDiv.className = "quiz-options";
+
+      item.options.forEach((opt, optIdx) => {
+        const btn = document.createElement("button");
+        btn.className = "opt-btn";
+        btn.innerText = opt;
+        btn.onclick = () => {
+          optDiv.querySelectorAll(".opt-btn").forEach(b => b.disabled = true);
+          if (optIdx === item.correct) {
+            btn.classList.add("correct");
+            batyrCorrect++;
+            if (batyrCorrect === batyrQuestions.length) {
+              document.getElementById("res-batyr").style.display = "block";
+            }
+          } else {
+            btn.classList.add("wrong");
+            optDiv.querySelectorAll(".opt-btn")[item.correct].classList.add("correct");
+          }
+        };
+        optDiv.appendChild(btn);
+      });
+      qDiv.appendChild(optDiv);
+      box.appendChild(qDiv);
+    });
+  }
+
+  /* ================= 3-МОДУЛЬ: ЕЛІМ-АЙ МЕН ДӘСТҮРЛІ ӨНЕР ================= */
+  const elimaiQuestions = [
+    {
+      q: "«Қаратаудың басынан көш келеді...» деп басталатын «Елім-ай» әні неліктен бүкілхалықтық зар мен ұранға айналды?",
+      options: [
+        "Қазақ халқының басына түскен қасіретті, ел сағынышын және бірлікке деген ұмтылысын бейнелегендіктен",
+        "Тек той-думандарда шырқалу үшін жазылғандықтан",
+        "Би үйрету мақсатында шығарылғандықтан",
+        "Басқа халықтардың әнінен аударылғандықтан"
+      ],
+      correct: 0
+    },
+    {
+      q: "XVIII ғасырдағы жыраулардың (Бұқар жырау, Ақтамберді, Үмбетей) басты ұлттық миссиясы қандай еді?",
+      options: [
+        "Халықты бірлікке шақырып, хандарға турасын айту және батырларға рух беру",
+        "Тек шежіре жазып қалдыру",
+        "Сауда керуендерін басқару",
+        "Мектеп салып бала оқыту"
+      ],
+      correct: 0
+    }
+  ];
+
+  let elimaiCorrect = 0;
+  function initElimaiQuiz() {
+    const box = document.getElementById("quiz-elimai");
+    box.innerHTML = "";
+    document.getElementById("res-elimai").style.display = "none";
+    elimaiCorrect = 0;
+
+    elimaiQuestions.forEach((item, qIdx) => {
+      const qDiv = document.createElement("div");
+      qDiv.style.background = "#f8fafc";
+      qDiv.style.padding = "16px";
+      qDiv.style.borderRadius = "10px";
+      qDiv.style.marginBottom = "15px";
+      qDiv.style.border = "1.5px solid #e2e8f0";
+      qDiv.innerHTML = `<div style="font-weight:bold; font-size:15px; margin-bottom:12px;">${qIdx + 1}. ${item.q}</div>`;
+
+      const optDiv = document.createElement("div");
+      optDiv.className = "quiz-options";
+
+      item.options.forEach((opt, optIdx) => {
+        const btn = document.createElement("button");
+        btn.className = "opt-btn";
+        btn.innerText = opt;
+        btn.onclick = () => {
+          optDiv.querySelectorAll(".opt-btn").forEach(b => b.disabled = true);
+          if (optIdx === item.correct) {
+            btn.classList.add("correct");
+            elimaiCorrect++;
+            if (elimaiCorrect === elimaiQuestions.length) {
+              document.getElementById("res-elimai").style.display = "block";
+            }
+          } else {
+            btn.classList.add("wrong");
+            optDiv.querySelectorAll(".opt-btn")[item.correct].classList.add("correct");
+          }
+        };
+        optDiv.appendChild(btn);
+      });
+      qDiv.appendChild(optDiv);
+      box.appendChild(qDiv);
+    });
+  }
+
+  // Іске қосу
+  initBatyrQuiz();
+  initElimaiQuiz();
+</script>
+
+</body>
+</html>
